@@ -1,0 +1,94 @@
+Same as other file but this time no call to to_uppercase was used.
+This is not practical useful as the comparison should be case-insensitive but it is interesting to take a look at the collisions
+
+00   32
+00 à 224
+01 á 225
+01 A 65
+01 a 97
+02 â 226
+02 B 66
+02 b 98
+03 ã 227
+03 C 67
+03 c 99
+04 Ä 196
+04 ä 228
+04 d 100
+04 D 68
+05 Å 197
+05 å 229
+05 e 101
+05 E 69
+06 æ 230
+06 f 102
+06 F 70
+07 ç 231
+07 g 103
+07 G 71
+08 è 232
+08 h 104
+08 H 72
+09 É 201
+09 é 233
+09 i 105
+09 I 73
+10 ê 234
+10 j 106
+10 J 74
+11 ë 235
+11 k 107
+11 K 75
+12 ì 236
+12 l 108
+12 L 76
+13 í 237
+13 m 109
+13 M 77
+14 î 238
+14 n 110
+14 N 78
+15 ï 239
+15 o 111
+15 O 79
+16 p 112
+16 P 80
+17 ñ 241
+17 q 113
+17 Q 81
+18 ò 242
+18 r 114
+18 R 82
+19 ó 243
+19 s 115
+19 S 83
+20 ô 244
+20 t 116
+20 T 84
+21 u 117
+21 U 85
+22 Ö 214
+22 ö 246
+22 v 118
+22 V 86
+23 w 119
+23 W 87
+24 ø 248
+24 x 120
+24 X 88
+25 y 121
+25 Y 89
+26 ú 250
+26 z 122
+26 Z 90
+27 û 251
+28 Ü 220
+28 ü 252
+31 ß 223
+(4 steps) Bier -> Gier -> Geier -> Geber -> Leber
+(6 steps) blau -> lau -> laue -> lauge -> luge -> Auge -> Alge
+(6 steps) Herz -> Harz -> Harn -> Hain -> Haien -> Hasen -> rasen
+(7 steps) Eis -> bis -> bist -> Mist -> Mast -> Maut -> kaut -> kalt
+(7 steps) Rhein -> Thein -> Tein -> Hein -> Hain -> Hais -> Haus -> raus
+Time taken for completing the tasks (time for creating wordlist excluded): 635.370826ms
+Time taken for reading file and precomputing bitmasks of wordlist: 135.481639902s
