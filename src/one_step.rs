@@ -1,4 +1,4 @@
-use super::{Word, AllWords};
+use super::{AllWords, Word};
 
 fn only_one_extra_letter(shorter: &Word, longer: &Word) -> bool {
     let mut offset = 0;
@@ -54,7 +54,11 @@ fn find_after_substitution<'a>(
             let mut diff = 0;
             for (a, b) in word.chars().zip(other.chars()) {
                 if a != b {
-                    diff = if diff == 0 { 1 } else { return false; };
+                    diff = if diff == 0 {
+                        1
+                    } else {
+                        return false;
+                    };
                 }
             }
             true
@@ -69,5 +73,3 @@ pub fn all_after_one_step<'a>(
         .chain(find_after_deletion(by_length, &word))
         .chain(find_after_substitution(by_length, &word))
 }
-
-

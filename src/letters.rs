@@ -27,9 +27,8 @@ impl Letters {
             .unique()
     }
     pub fn substitution_variations(self) -> impl Iterator<Item = Letters> {
-        Self::power_product().map(move |(inserted, deleted)| {
-            Letters((self.0 & !deleted) | inserted)
-        })
+        Self::power_product()
+            .map(move |(inserted, deleted)| Letters((self.0 & !deleted) | inserted))
             .unique()
     }
 }

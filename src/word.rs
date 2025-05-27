@@ -1,5 +1,5 @@
 use super::letters::Letters;
-use derive_more::{Deref, From, Into, Display};
+use derive_more::{Deref, Display, From, Into};
 use std::sync::Arc;
 
 #[derive(Debug, Display, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Deref, From, Into)]
@@ -7,8 +7,8 @@ use std::sync::Arc;
 pub struct Word {
     #[deref]
     uppercase: Arc<str>,
-    #[cfg(feature="cache-letters")]
-    letters: Letters
+    #[cfg(feature = "cache-letters")]
+    letters: Letters,
 }
 
 fn letters_from_uppercase(uppercase: &str) -> Letters {
@@ -22,7 +22,7 @@ fn letters_from_uppercase(uppercase: &str) -> Letters {
         /*
         // This transforms A-Z to 0-25 and shifts, other characters are difficult to deal with
         val |= 1u32.wrapping_shl((n as u8).wrapping_sub(b'A') as u32);
-         
+
         // This transforms A-Z and some diacritic characters with few collisions into a 64-bit-mask
         val |= 1u64 | ((n & 0b0011_1111) | ((n & 128) >> 2));
 
@@ -40,8 +40,8 @@ impl Word {
     }
     pub fn new(text: &str) -> Self {
         // NOTE: maybe extra feature flag for to_ascii_uppercase()
-        Self{
-            uppercase: text.to_uppercase().into()
+        Self {
+            uppercase: text.to_uppercase().into(),
         }
     }
 }
