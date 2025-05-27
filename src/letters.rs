@@ -34,7 +34,13 @@ impl Letters {
     }
 }
 
-pub const POWERS_OF_TWO: [u32; 26] = [
+pub const POWERS_OF_TWO: [u32; 32] = [
+    1 << 31,
+    1 << 30,
+    1 << 29,
+    1 << 28,
+    1 << 27,
+    1 << 26,
     1 << 25,
     1 << 24,
     1 << 23,
