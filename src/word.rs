@@ -14,8 +14,13 @@ impl Word {
     pub fn chars(&self) -> impl Iterator<Item = char> {
         self.uppercase.chars()
     }
+    #[cfg(feature = "unicode-word-len")]
     pub fn len(&self) -> usize {
         self.chars().count()
+    }
+    #[cfg(not(feature = "unicode-word-len"))]
+    pub fn len(&self) -> usize {
+        self.uppercase.len()
     }
 }
 
