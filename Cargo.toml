@@ -22,3 +22,7 @@ harness = false
 [[bench]]
 name = "wordlist_read"
 harness = false
+
+[[bench]]
+name = "shortest_path"
+harness = false

@@ -7,7 +7,8 @@ fn criterion_benchmark(c: &mut Criterion) {
     let mut g = c.benchmark_group("wordlist");
     g.measurement_time(Duration::from_secs(60));
 
-    let words = std::fs::read_to_string("wordlist-german.txt").expect("Wordlist file to be present");
+    let words =
+        std::fs::read_to_string("wordlist-german.txt").expect("Wordlist file to be present");
     g.bench_function("bitmasks", |b| {
         b.iter(|| {
             for word in words.lines().map(Word::new) {
@@ -17,11 +18,11 @@ fn criterion_benchmark(c: &mut Criterion) {
     });
 
     g.bench_function("io and bitmasks", |b| {
-            b.iter(|| {
-                let _ = read_wordlist(black_box("wordlist-german.txt")).expect("Wordlist file to be present");
-            });
+        b.iter(|| {
+            let _ = read_wordlist(black_box("wordlist-german.txt"))
+                .expect("Wordlist file to be present");
         });
-
+    });
 }
 
 criterion_group!(benches, criterion_benchmark);

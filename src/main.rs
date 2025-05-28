@@ -81,10 +81,7 @@ fn main() {
     for (start, _) in tasks {
         visual_benchmark_without_stopping(&by_length, Word::new(start), 10);
     }
-    println!(
-        "Time taken only for generating ways: {:?}",
-        start.elapsed()
-    );
+    println!("Time taken only for generating ways: {:?}", start.elapsed());
 
     print_len_histogram(&by_length);
 }
