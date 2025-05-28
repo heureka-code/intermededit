@@ -72,12 +72,19 @@ fn main() {
         .par_iter()
         .map(|(start, target)| solution(&by_length, start, 10, target))
         .collect();
-    for (start, _) in tasks {
-        visual_benchmark_without_stopping(&by_length, Word::new(start), 10);
-    }
     println!(
         "Time taken for completing the tasks (time for creating wordlist excluded): {:?}",
         start.elapsed()
     );
+    println!("Starting visual benchmark of way generation:");
+    let start = Instant::now();
+    for (start, _) in tasks {
+        visual_benchmark_without_stopping(&by_length, Word::new(start), 10);
+    }
+    println!(
+        "Time taken only for generating ways: {:?}",
+        start.elapsed()
+    );
+
     print_len_histogram(&by_length);
 }
