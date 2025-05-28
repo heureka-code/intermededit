@@ -1,12 +1,13 @@
 use super::{AllWords, Word};
 
 fn only_one_extra_letter(shorter: &Word, longer: &Word) -> bool {
-    let mut offset = 0;
-    for (a, shortera) in shorter.chars().enumerate() {
-        if Some(shortera) != longer.chars().nth(a + offset) {
-            if offset == 0 {
-                offset = 1;
-                if Some(shortera) != longer.chars().nth(a + offset) {
+    let mut offset = false;
+    let mut longer_chars = longer.chars();
+    for shortera in shorter.chars() {
+        if Some(shortera) != longer_chars.next() {
+            if !offset {
+                offset = true;
+                if Some(shortera) != longer_chars.next() {
                     return false;
                 }
             } else {
