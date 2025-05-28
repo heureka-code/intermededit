@@ -1,14 +1,22 @@
 use super::letters::Letters;
-use derive_more::{Deref, Display, From, Into};
+use derive_more::{Display, From, Into};
 use std::sync::Arc;
 
-#[derive(Debug, Display, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Deref, From, Into)]
+#[derive(Debug, Display, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, From, Into)]
 #[display("{uppercase}")]
 pub struct Word {
-    #[deref]
     uppercase: Arc<str>,
     #[cfg(feature = "cache-letters")]
     letters: Letters,
+}
+
+impl Word {
+    pub fn chars(&self) -> impl Iterator<Item = char> {
+        self.uppercase.chars()
+    }
+    pub fn len(&self) -> usize {
+        self.chars().count()
+    }
 }
 
 fn letters_from_uppercase(uppercase: &str) -> Letters {
