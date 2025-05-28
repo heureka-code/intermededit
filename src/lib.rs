@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
+pub mod edge_generation;
 mod letters;
 mod one_step;
 mod read;

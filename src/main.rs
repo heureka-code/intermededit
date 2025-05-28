@@ -52,6 +52,67 @@ fn print_len_histogram(by_length: &AllWords) {
     }
 }
 
+fn concurrent_edge_file_creation(all_words: &AllWords) {
+    use edge_generation::*;
+    let i = std::thread::spawn({
+        let all_words = all_words.clone();
+        move || {
+            for len in 0..MAX_WORD_LEN {
+                edges_for_insertion(&all_words, len).unwrap();
+            }
+        }
+    });
+    let d = std::thread::spawn({
+        let all_words = all_words.clone();
+        move || {
+            for len in 1..MAX_WORD_LEN {
+                edges_for_deletion(&all_words, len).unwrap();
+            }
+        }
+    });
+    let r = std::thread::spawn({
+        let all_words = all_words.clone();
+        move || {
+            for len in 0..MAX_WORD_LEN {
+                edges_for_substitution(&all_words, len).unwrap();
+            }
+        }
+    });
+
+    i.join().unwrap();
+    d.join().unwrap();
+    r.join().unwrap();
+}
+
+fn run_example_tasks_in_parallel(all_words: &AllWords, tasks: &[(&str, &str)]) {
+    let start = Instant::now();
+    let _i: Vec<_> = tasks
+        .par_iter()
+        .map(|(start, target)| solution(&all_words, start, 10, target))
+        .collect();
+    println!(
+        "Time taken for completing the tasks (time for creating wordlist excluded): {:?}",
+        start.elapsed()
+    );
+}
+
+fn do_timed_way_generation_benchmark(all_words: &AllWords, tasks: &[(&str, &str)]) {
+    println!("Starting visual benchmark of way generation:");
+    let start = Instant::now();
+    for (start, _) in tasks {
+        visual_benchmark_without_stopping(&all_words, Word::new(start), 10);
+    }
+    println!("Time taken only for generating ways: {:?}", start.elapsed());
+}
+
+const TASKS: [(&str, &str); 5] = [
+    ("Herz", "rasen"),
+    ("Bier", "Leber"),
+    ("blau", "Alge"),
+    ("Rhein", "raus"),
+    ("Eis", "kalt"),
+];
+
 fn main() {
     let start = Instant::now();
     let by_length = read_wordlist("wordlist-german.txt").expect("Wordlist file");
@@ -60,28 +121,9 @@ fn main() {
         start.elapsed()
     );
 
-    let tasks = vec![
-        ("Herz", "rasen"),
-        ("Bier", "Leber"),
-        ("blau", "Alge"),
-        ("Rhein", "raus"),
-        ("Eis", "kalt"),
-    ];
-    let start = Instant::now();
-    let _i: Vec<_> = tasks
-        .par_iter()
-        .map(|(start, target)| solution(&by_length, start, 10, target))
-        .collect();
-    println!(
-        "Time taken for completing the tasks (time for creating wordlist excluded): {:?}",
-        start.elapsed()
-    );
-    println!("Starting visual benchmark of way generation:");
-    let start = Instant::now();
-    for (start, _) in tasks {
-        visual_benchmark_without_stopping(&by_length, Word::new(start), 10);
-    }
-    println!("Time taken only for generating ways: {:?}", start.elapsed());
+    // concurrent_edge_file_creation(&by_length);
 
-    print_len_histogram(&by_length);
+    run_example_tasks_in_parallel(&by_length, &TASKS);
+    do_timed_way_generation_benchmark(&by_length, &TASKS);
+    // print_len_histogram(&by_length);
 }
