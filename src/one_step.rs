@@ -7,18 +7,17 @@ fn only_one_extra_letter(shorter: &Word, longer: &Word) -> bool {
         if Some(shortera) != longer_chars.next() {
             if !offset {
                 offset = true;
-                if Some(shortera) != longer_chars.next() {
-                    return false;
+                if Some(shortera) == longer_chars.next() {
+                    continue;
                 }
-            } else {
-                return false;
             }
+            return false;
         }
     }
     true
 }
 
-fn find_after_insertion<'a>(
+pub fn find_after_insertion<'a>(
     by_length: &'a AllWords,
     word: &'a Word,
 ) -> impl Iterator<Item = &'a Word> {
@@ -30,7 +29,7 @@ fn find_after_insertion<'a>(
         .filter(move |other| only_one_extra_letter(&word, &other))
 }
 
-fn find_after_deletion<'a>(
+pub fn find_after_deletion<'a>(
     by_length: &'a AllWords,
     word: &'a Word,
 ) -> impl Iterator<Item = &'a Word> {
@@ -42,7 +41,7 @@ fn find_after_deletion<'a>(
         .filter(move |other| only_one_extra_letter(&other, &word))
 }
 
-fn find_after_substitution<'a>(
+pub fn find_after_substitution<'a>(
     by_length: &'a AllWords,
     word: &'a Word,
 ) -> impl Iterator<Item = &'a Word> {
