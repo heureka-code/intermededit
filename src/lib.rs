@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
+pub mod components;
 pub mod edge_generation;
 mod letters;
 mod one_step;
@@ -12,6 +13,7 @@ pub type AllWords = Vec<WordsOfLength>;
 pub const MAX_WORD_LEN: usize = 50;
 pub use one_step::all_after_one_step;
 pub use read::read_wordlist;
+pub use components::{get_any_word, get_word_count};
 
 pub fn find_way(
     by_length: &AllWords,
@@ -25,7 +27,7 @@ pub fn find_way(
     for _step_no in 0..max_distance {
         let mut temp = HashSet::new();
         for rel_start in current {
-            for reached in all_after_one_step(by_length, &rel_start) {
+            for reached in all_after_one_step(by_length, rel_start) {
                 reached_from
                     .entry(reached.clone())
                     .or_insert(rel_start.clone());
@@ -55,7 +57,7 @@ pub fn generate_and_traverse_all_ways_without_stopping(
     for _step_no in 0..max_distance {
         let mut temp = HashSet::new();
         for rel_start in current {
-            for reached in all_after_one_step(by_length, &rel_start) {
+            for reached in all_after_one_step(by_length, rel_start) {
                 reached_from
                     .entry(reached.clone())
                     .or_insert(rel_start.clone());

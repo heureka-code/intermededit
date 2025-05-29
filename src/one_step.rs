@@ -26,7 +26,7 @@ pub fn find_after_insertion<'a>(
         .insert_variations()
         .flat_map(|letter_mask| words_after_insertion.get(&letter_mask))
         .flatten()
-        .filter(move |other| only_one_extra_letter(&word, &other))
+        .filter(move |other| only_one_extra_letter(word, other))
 }
 
 pub fn find_after_deletion<'a>(
@@ -38,7 +38,7 @@ pub fn find_after_deletion<'a>(
         .delete_variations()
         .flat_map(|letter_mask| words_after_deletion.get(&letter_mask))
         .flatten()
-        .filter(move |other| only_one_extra_letter(&other, &word))
+        .filter(move |other| only_one_extra_letter(other, word))
 }
 
 pub fn find_after_substitution<'a>(
@@ -69,7 +69,7 @@ pub fn all_after_one_step<'a>(
     by_length: &'a AllWords,
     word: &'a Word,
 ) -> impl Iterator<Item = &'a Word> {
-    find_after_insertion(by_length, &word)
-        .chain(find_after_deletion(by_length, &word))
-        .chain(find_after_substitution(by_length, &word))
+    find_after_insertion(by_length, word)
+        .chain(find_after_deletion(by_length, word))
+        .chain(find_after_substitution(by_length, word))
 }

@@ -10,6 +10,7 @@ pub struct Word {
     letters: Letters,
 }
 
+#[allow(clippy::len_without_is_empty)]
 impl Word {
     pub fn chars(&self) -> impl Iterator<Item = char> {
         self.uppercase.chars()

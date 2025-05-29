@@ -1,7 +1,12 @@
 use std::{
     collections::{HashMap, HashSet},
+    fs::File,
+    io::BufWriter,
     time::Instant,
 };
+
+mod visual_component_classification;
+use visual_component_classification::visual_classify_words;
 
 use intermededit::*;
 use itertools::Itertools;
@@ -20,7 +25,7 @@ fn visual_benchmark_without_stopping(by_length: &AllWords, start: Word, max_dist
         pb.inc(1);
         let mut temp = HashSet::new();
         for rel_start in current {
-            for reached in all_after_one_step(by_length, &rel_start) {
+            for reached in all_after_one_step(by_length, rel_start) {
                 reached_from
                     .entry(reached.clone())
                     .or_insert(rel_start.clone());
@@ -42,6 +47,7 @@ fn solution(by_length: &AllWords, start: &str, max_distance: usize, target: &str
     }
 }
 
+#[allow(unused)]
 fn print_len_histogram(by_length: &AllWords) {
     for (ind, h) in by_length.iter().enumerate() {
         println!(
@@ -52,6 +58,7 @@ fn print_len_histogram(by_length: &AllWords) {
     }
 }
 
+#[allow(unused)]
 fn concurrent_edge_file_creation(all_words: &AllWords) {
     use edge_generation::*;
     let i = std::thread::spawn({
@@ -88,7 +95,7 @@ fn run_example_tasks_in_parallel(all_words: &AllWords, tasks: &[(&str, &str)]) {
     let start = Instant::now();
     let _i: Vec<_> = tasks
         .par_iter()
-        .map(|(start, target)| solution(&all_words, start, 10, target))
+        .map(|(start, target)| solution(all_words, start, 10, target))
         .collect();
     println!(
         "Time taken for completing the tasks (time for creating wordlist excluded): {:?}",
@@ -96,11 +103,12 @@ fn run_example_tasks_in_parallel(all_words: &AllWords, tasks: &[(&str, &str)]) {
     );
 }
 
+#[allow(unused)]
 fn do_timed_way_generation_benchmark(all_words: &AllWords, tasks: &[(&str, &str)]) {
     println!("Starting visual benchmark of way generation:");
     let start = Instant::now();
     for (start, _) in tasks {
-        visual_benchmark_without_stopping(&all_words, Word::new(start), 10);
+        visual_benchmark_without_stopping(all_words, Word::new(start), 10);
     }
     println!("Time taken only for generating ways: {:?}", start.elapsed());
 }
@@ -121,9 +129,16 @@ fn main() {
         start.elapsed()
     );
 
+    run_example_tasks_in_parallel(&by_length, &TASKS);
+
+    visual_classify_words(
+        by_length,
+        usize::MAX,
+        BufWriter::new(File::create_new("single-components42.txt").unwrap()),
+        BufWriter::new(File::create_new("too-big-maybe-components42.txt").unwrap()),
+    );
     // concurrent_edge_file_creation(&by_length);
 
-    run_example_tasks_in_parallel(&by_length, &TASKS);
-    do_timed_way_generation_benchmark(&by_length, &TASKS);
+    // do_timed_way_generation_benchmark(&by_length, &TASKS);
     // print_len_histogram(&by_length);
 }
