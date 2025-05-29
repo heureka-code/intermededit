@@ -23,11 +23,31 @@ fn classify_words_file_writer_thread(
     })
 }
 
+#[allow(unused)]
+pub fn visual_classify_words_exhaustive(all_words: AllWords, single_components: BufWriter<File>) {
+    visual_classify_words_helper(all_words, usize::MAX, single_components, None);
+}
+
+#[allow(unused)]
 pub fn visual_classify_words(
     all_words: AllWords,
     max_distance: usize,
     single_components: BufWriter<File>,
     too_big_components: BufWriter<File>,
+) {
+    visual_classify_words_helper(
+        all_words,
+        max_distance,
+        single_components,
+        Some(too_big_components),
+    );
+}
+
+fn visual_classify_words_helper(
+    all_words: AllWords,
+    max_distance: usize,
+    single_components: BufWriter<File>,
+    too_big_components: Option<BufWriter<File>>,
 ) {
     let total_word_count = get_word_count(&all_words);
 
@@ -43,19 +63,23 @@ pub fn visual_classify_words(
             rx_single,
             tx_progress.clone(),
         );
-        let big_unknown_thread = classify_words_file_writer_thread(
-            ComponentAnalysis::TooBig,
-            too_big_components,
-            rx_unknown,
-            tx_progress,
-        );
+        let big_unknown_thread = too_big_components.map(|too_big_components: BufWriter<File>| {
+            classify_words_file_writer_thread(
+                ComponentAnalysis::TooBig,
+                too_big_components,
+                rx_unknown,
+                tx_progress,
+            )
+        });
 
         classify_words_into_components(all_words, max_distance, tx_single, tx_unknown);
 
         (single_complete_thread, big_unknown_thread, pb_thread)
     };
     single_complete_thread.join().unwrap().unwrap();
-    big_unknown_thread.join().unwrap().unwrap();
+    if let Some(t) = big_unknown_thread {
+        t.join().unwrap().unwrap()
+    }
     pb_thread.join().unwrap();
 }
 

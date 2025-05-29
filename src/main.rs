@@ -6,7 +6,7 @@ use std::{
 };
 
 mod visual_component_classification;
-use visual_component_classification::visual_classify_words;
+use visual_component_classification::visual_classify_words_exhaustive;
 
 use intermededit::*;
 use itertools::Itertools;
@@ -131,11 +131,9 @@ fn main() {
 
     run_example_tasks_in_parallel(&by_length, &TASKS);
 
-    visual_classify_words(
+    visual_classify_words_exhaustive(
         by_length,
-        usize::MAX,
-        BufWriter::new(File::create_new("single-components42.txt").unwrap()),
-        BufWriter::new(File::create_new("too-big-maybe-components42.txt").unwrap()),
+        BufWriter::new(File::create_new("single-components-maxint.txt").unwrap()),
     );
     // concurrent_edge_file_creation(&by_length);
 

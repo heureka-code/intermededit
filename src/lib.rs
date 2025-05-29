@@ -11,9 +11,9 @@ pub use word::Word;
 pub type WordsOfLength = HashMap<Letters, Vec<Word>>;
 pub type AllWords = Vec<WordsOfLength>;
 pub const MAX_WORD_LEN: usize = 50;
+pub use components::{get_any_word, get_word_count};
 pub use one_step::all_after_one_step;
 pub use read::read_wordlist;
-pub use components::{get_any_word, get_word_count};
 
 pub fn find_way(
     by_length: &AllWords,
