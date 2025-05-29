@@ -73,3 +73,164 @@ complete: 1908795 in 824294, unknown: 0 in 0 [01:24:14] [███████�
 I consider setting a large $n$ (from now on I'll set the maximum representable value in the source code)
 being a good alternative to the need of merging single components afterwards.
 Eventhough it could be an optimization for larger graphs.
+
+($n=`usize::MAX`$, also print tasks)
+```shell
+Time taken for reading file and precomputing bitmasks of wordlist: 1.82621978s
+(3 steps) BIER -> EIER -> EBER -> LEBER
+(5 steps) RHEIN -> REIN -> REN -> RAN -> RAU -> RAUS
+(4 steps) EIS -> AIS -> ALS -> ALT -> KALT
+(5 steps) BLAU -> BLAUE -> LAUE -> LAUGE -> AUGE -> ALGE
+(6 steps) HERZ -> HER -> EHER -> EHEN -> REHEN -> RAHEN -> RASEN
+Time taken for completing the tasks (time for creating wordlist excluded): 294.813079ms
+complete: 1908795 in 824294, unknown: 0 in 0 [01:11:00] [█████████████████████████████████████████████████████████████████████████████████] 1908795/1908795 (448.0607/s, 0s)
+```
+
+With this result we can look of the distribution of words in connected components:
+```shell
+❯ awk -F '\t' '{print NF}' single-components-maxint.txt  | sort -n | uniq -c
+ 436948 1
+ 187214 2
+  71806 3
+  61140 4
+  19600 5
+  28690 6
+   2580 7
+   2687 8
+   1246 9
+   1209 10
+   2386 11
+   2009 12
+    595 13
+    647 14
+    930 15
+    588 16
+    662 17
+   1000 18
+    282 19
+    156 20
+    161 21
+    180 22
+    150 23
+    158 24
+     93 25
+     78 26
+     70 27
+     97 28
+     76 29
+     80 30
+     49 31
+     45 32
+     46 33
+     44 34
+     48 35
+     62 36
+     23 37
+     25 38
+     21 39
+     21 40
+     12 41
+     21 42
+     24 43
+     18 44
+     20 45
+      7 46
+     10 47
+     16 48
+     20 49
+      9 50
+     10 51
+      9 52
+     12 53
+     12 54
+      5 55
+      6 56
+     12 57
+      7 58
+      4 59
+      3 60
+      9 61
+      1 62
+      9 63
+      3 65
+      9 66
+      4 67
+      2 68
+      2 69
+      4 70
+      2 71
+      4 72
+      3 73
+      6 75
+      4 76
+      3 78
+      3 80
+      1 81
+      1 82
+      2 83
+      1 84
+      2 85
+      1 86
+      1 87
+      2 88
+      2 89
+      1 90
+      4 91
+      2 93
+      4 94
+      1 95
+      1 97
+      1 98
+      1 99
+      1 100
+      1 101
+      2 102
+      1 104
+      2 106
+      1 107
+      2 110
+      2 113
+      1 114
+      1 116
+      1 119
+      2 121
+      2 122
+      1 124
+      1 129
+      1 130
+      1 134
+      1 135
+      3 138
+      2 142
+      1 143
+      1 146
+      3 147
+      1 150
+      1 153
+      1 154
+      1 159
+      1 160
+      1 170
+      1 172
+      1 179
+      1 186
+      1 191
+      1 200
+      1 214
+      1 228
+      1 258
+      1 284
+      1 288
+      1 306
+      1 311
+      1 344
+      1 351
+      1 373
+      1 428
+      1 564
+      1 835
+      1 105218
+```
+
+One component is very large but a lot are smaller and many groups consist of 1 element each.
+
