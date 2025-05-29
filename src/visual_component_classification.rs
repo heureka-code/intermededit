@@ -16,7 +16,12 @@ fn classify_words_file_writer_thread(
     std::thread::spawn(move || {
         let mut writer = file;
         while let Ok(d) = rx_data.recv() {
-            writer.write_fmt(format_args!("{}\n", d.iter().join("\t")))?;
+            #[cfg(feature = "words-in-components-sorted")]
+            let line = d.iter().sorted().join("\t");
+            #[cfg(not(feature = "words-in-components-sorted"))]
+            let line = d.iter().join("\t");
+
+            writer.write_fmt(format_args!("{line}\n"))?;
             let _ = tx_progress.send((kind, d.len()));
         }
         Ok(())

@@ -13,9 +13,10 @@ rayon = "1.10.0"
 criterion = { version="0.5", features=["html_reports"]}
 
 [features]
-default = ["unicode-word-len"]
+default = ["unicode-word-len", "words-in-components-sorted"]
 cache-letters = []
 unicode-word-len = []
+words-in-components-sorted = []
 
 [lib]
 bench = false
