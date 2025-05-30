@@ -1,3 +1,6 @@
+Code documentation: [https://heureka-code.github.io/intermededit](https://heureka-code.github.io/intermededit)
+
+
 ## First version using subtraction of b'A' from u8 repr of characters
 ```bash
 ❯ cargo build --release       # compile binary
