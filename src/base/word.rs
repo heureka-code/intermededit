@@ -44,7 +44,7 @@ fn letters_from_uppercase(uppercase: &str) -> Letters {
         val |= 1u64 << ((n & 0b0001_1111) | ((n & 128) >> 2));
         */
     }
-    Letters(val)
+    Letters::new(val)
 }
 
 #[cfg(not(feature = "cache-letters"))]

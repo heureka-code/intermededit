@@ -2,17 +2,16 @@ use std::collections::{HashMap, HashSet};
 
 pub mod components;
 pub mod edge_generation;
-mod letters;
-mod one_step;
+mod base;
 mod read;
-mod word;
-pub use letters::Letters;
-pub use word::Word;
-pub type WordsOfLength = HashMap<Letters, Vec<Word>>;
-pub type AllWords = Vec<WordsOfLength>;
+pub use base::Letters;
+pub use base::Word;
+pub use base::AllWords;
+pub use base::WordsOfLength;
+
 pub const MAX_WORD_LEN: usize = 50;
 pub use components::{get_any_word, get_word_count};
-pub use one_step::all_after_one_step;
+pub use base::all_after_one_step;
 pub use read::read_wordlist;
 
 pub fn find_way(

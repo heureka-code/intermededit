@@ -74,7 +74,7 @@ I consider setting a large $n$ (from now on I'll set the maximum representable v
 being a good alternative to the need of merging single components afterwards.
 Eventhough it could be an optimization for larger graphs.
 
-($n=`usize::MAX`$, also print tasks)
+($n=$`usize::MAX`, also print tasks)
 ```shell
 Time taken for reading file and precomputing bitmasks of wordlist: 1.82621978s
 (3 steps) BIER -> EIER -> EBER -> LEBER
@@ -86,7 +86,7 @@ Time taken for completing the tasks (time for creating wordlist excluded): 294.8
 complete: 1908795 in 824294, unknown: 0 in 0 [01:11:00] [█████████████████████████████████████████████████████████████████████████████████] 1908795/1908795 (448.0607/s, 0s)
 ```
 
-With this result we can look of the distribution of words in connected components:
+With this result we can look at the distribution of words in connected components:
 ```shell
 ❯ awk -F '\t' '{print NF}' single-components-maxint.txt  | sort -n | uniq -c
  436948 1

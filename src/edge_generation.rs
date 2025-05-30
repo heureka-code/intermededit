@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
-use crate::one_step::{find_after_deletion, find_after_insertion, find_after_substitution};
+use crate::base::one_step::{find_after_deletion, find_after_insertion, find_after_substitution};
 use crate::{AllWords, Word};
 
 enum Mode {
