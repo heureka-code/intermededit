@@ -2,6 +2,9 @@
 name = "intermededit"
 version = "0.1.0"
 edition = "2024"
+documentation = "https://heureka-code.github.io/intermededit"
+repository = "https://github.com/heureka-code/intermededit"
+homepage = "https://github.com/heureka-code/intermededit"
 
 [dependencies]
 derive_more = { version="2.0.1", features=["into", "deref", "from", "as_ref", "display"] }
