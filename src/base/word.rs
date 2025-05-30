@@ -4,10 +4,14 @@ use std::sync::Arc;
 
 /// Represents a single word in uppercase letters.
 ///
-/// Internally it stores the text as [Arc<str>] so it's cheap to copy and thread safe.
+/// Internally it stores the text as [`Arc<str>`] so it's cheap to copy and thread safe.
 ///
-/// If the `cache-letters` feature is enabled it will also contain the matchin instance of [Letters].
+/// If the `cache-letters` feature is enabled it will also contain the matching instance of [Letters].
 /// If the feature is disabled (default), the instance will be computed every time it is requested.
+///
+/// This implementation assigns each letter a bit by considering only the least significant five
+/// bits and uses them for shifting 1 one as [`u32`].
+///
 #[derive(Debug, Display, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, From, Into)]
 #[display("{uppercase}")]
 pub struct Word {
@@ -60,9 +64,19 @@ fn letters_from_uppercase(uppercase: &str) -> Letters {
 
 #[cfg(not(feature = "cache-letters"))]
 impl Word {
+    /// If the `cache-letters` feature is enabled this will return the copy of a field that was
+    /// created by [Word::new].
+    /// If the feature is disabled (default), the instance will be computed every time this method runs.
     pub fn calc_letters(&self) -> Letters {
         letters_from_uppercase(&self.uppercase)
     }
+    /// Turns the provided string slice into uppercase and stores the resulting string in and
+    /// [`Arc<str>`]
+    ///
+    /// If the `cache-letters` feature is enabled it will also compute a [Letters] instance for
+    /// this word.
+    /// If the feature is disabled (default), the type will only contain the text and the bit mask
+    /// gets computed on every invocation of [Self::calc_letters].
     pub fn new(text: &str) -> Self {
         // NOTE: maybe extra feature flag for to_ascii_uppercase()
         Self {
@@ -73,9 +87,19 @@ impl Word {
 
 #[cfg(feature = "cache-letters")]
 impl Word {
+    /// If the `cache-letters` feature is enabled this will return the copy of a field that was
+    /// created by [Word::new].
+    /// If the feature is disabled (default), the instance will be computed every time this method runs.
     pub fn calc_letters(&self) -> Letters {
         self.letters
     }
+    /// Turns the provided string slice into uppercase and stores the resulting string in and
+    /// [`Arc<str>`]
+    ///
+    /// If the `cache-letters` feature is enabled it will also compute a [Letters] instance for
+    /// this word.
+    /// If the feature is disabled (default), the type will only contain the text and the bit mask
+    /// gets computed on every invocation of [Self::calc_letters].
     pub fn new(text: &str) -> Self {
         // NOTE: maybe extra feature flag for to_ascii_uppercase()
         let uppercase: Arc<str> = text.to_uppercase().into();

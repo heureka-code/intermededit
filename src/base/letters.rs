@@ -33,7 +33,6 @@ impl Letters {
     ///
     /// If a new letter is added it's bit value could be already in the mask
     /// (when a letter with the same associated bit value is already in the word)
-    ///
     /// or no letter with this letter's associated bit is already in the mask and one new bit must
     /// be set.
     ///
@@ -51,7 +50,6 @@ impl Letters {
     ///
     /// If a letter is removed whose bit value is different from all other letter's associated bits
     /// this bit needs to be deactivated.
-    ///
     /// If there is another letter with this associated bit nothing should change. This is achieved
     /// by including 0 in the iterator of "bits".
     ///
