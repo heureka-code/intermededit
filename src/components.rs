@@ -1,8 +1,6 @@
 use std::{collections::HashSet, sync::mpsc::Sender};
 
-use itertools::Itertools;
-
-use crate::{AllWords, Word, all_after_one_step};
+use crate::{AllWords, Word, all_after_one_step, base::*};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum ComponentAnalysis {
@@ -34,23 +32,6 @@ pub fn limited_component_classification(
         }
     }
     (reached, ComponentAnalysis::TooBig)
-}
-
-pub fn get_any_word(all_words: &AllWords) -> Option<&Word> {
-    all_words.iter().flat_map(|b| b.values()).flatten().next()
-}
-pub fn get_word_count(all_words: &AllWords) -> usize {
-    all_words.iter().flat_map(|b| b.values()).flatten().count()
-}
-fn remove_iter_from_words<'a>(all_words: &mut AllWords, to_remove: impl Iterator<Item = &'a Word>) {
-    for w in to_remove {
-        let (len, letters) = (w.len(), w.calc_letters());
-        if let Some(buc) = all_words[len].get_mut(&letters) {
-            if let Some((pos, _)) = buc.iter().find_position(|a| a == &w) {
-                buc.remove(pos);
-            }
-        }
-    }
 }
 
 pub fn classify_words_into_components(

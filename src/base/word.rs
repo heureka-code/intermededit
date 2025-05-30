@@ -2,6 +2,12 @@ use super::letters::Letters;
 use derive_more::{Display, From, Into};
 use std::sync::Arc;
 
+/// Represents a single word in uppercase letters.
+///
+/// Internally it stores the text as [Arc<str>] so it's cheap to copy and thread safe.
+///
+/// If the `cache-letters` feature is enabled it will also contain the matchin instance of [Letters].
+/// If the feature is disabled (default), the instance will be computed every time it is requested.
 #[derive(Debug, Display, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, From, Into)]
 #[display("{uppercase}")]
 pub struct Word {
@@ -12,14 +18,19 @@ pub struct Word {
 
 #[allow(clippy::len_without_is_empty)]
 impl Word {
+    /// Iterator over the single characters ([str::chars])
     pub fn chars(&self) -> impl Iterator<Item = char> {
         self.uppercase.chars()
     }
     #[cfg(feature = "unicode-word-len")]
+    /// The length of the word, if the feature `unicode-word-len` is enabled (default) this is
+    /// the number of characters yielded by [str::chars], otherwise it's simply the number of bytes
     pub fn len(&self) -> usize {
         self.chars().count()
     }
     #[cfg(not(feature = "unicode-word-len"))]
+    /// The length of the word, if the feature `unicode-word-len` is enabled (default) this is
+    /// the number of characters yielded by [str::chars], otherwise it's simply the number of bytes
     pub fn len(&self) -> usize {
         self.uppercase.len()
     }
