@@ -1,10 +1,10 @@
 mod letters;
-mod word;
 pub mod one_step;
+mod word;
 
 pub use letters::Letters;
-pub use word::Word;
 pub use one_step::all_after_one_step;
+pub use word::Word;
 
 pub type WordsOfLength = std::collections::HashMap<Letters, Vec<Word>>;
 pub type AllWords = Vec<WordsOfLength>;
@@ -15,7 +15,10 @@ pub fn get_any_word(all_words: &AllWords) -> Option<&Word> {
 pub fn get_word_count(all_words: &AllWords) -> usize {
     all_words.iter().flat_map(|b| b.values()).flatten().count()
 }
-pub fn remove_iter_from_words<'a>(all_words: &mut AllWords, to_remove: impl Iterator<Item = &'a Word>) {
+pub fn remove_iter_from_words<'a>(
+    all_words: &mut AllWords,
+    to_remove: impl Iterator<Item = &'a Word>,
+) {
     use itertools::Itertools;
     for w in to_remove {
         let (len, letters) = (w.len(), w.calc_letters());
@@ -26,5 +29,3 @@ pub fn remove_iter_from_words<'a>(all_words: &mut AllWords, to_remove: impl Iter
         }
     }
 }
-
-

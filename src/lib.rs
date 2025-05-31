@@ -1,17 +1,18 @@
 use std::collections::{HashMap, HashSet};
 
+mod base;
 pub mod components;
 pub mod edge_generation;
-mod base;
 mod read;
+pub mod shortest_paths;
+pub use base::AllWords;
 pub use base::Letters;
 pub use base::Word;
-pub use base::AllWords;
 pub use base::WordsOfLength;
 
 pub const MAX_WORD_LEN: usize = 50;
-pub use base::{get_any_word, get_word_count};
 pub use base::all_after_one_step;
+pub use base::{get_any_word, get_word_count};
 pub use read::read_wordlist;
 
 pub fn find_way(

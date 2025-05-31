@@ -129,6 +129,12 @@ fn main() {
         start.elapsed()
     );
 
+    intermededit::shortest_paths::find_shortest_paths_from_file(
+        "single-components-maxint.txt",
+        BufWriter::new(File::create_new("shortest_paths.txt").unwrap()),
+    )
+    .unwrap();
+
     run_example_tasks_in_parallel(&by_length, &TASKS);
 
     visual_classify_words_exhaustive(

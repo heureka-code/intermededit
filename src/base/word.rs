@@ -20,6 +20,14 @@ pub struct Word {
     letters: Letters,
 }
 
+impl Default for Word {
+    fn default() -> Self {
+        Self {
+            uppercase: Default::default(),
+        }
+    }
+}
+
 #[allow(clippy::len_without_is_empty)]
 impl Word {
     /// Iterator over the single characters ([str::chars])
