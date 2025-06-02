@@ -74,7 +74,25 @@ impl Letters {
             .map(move |(inserted, deleted)| Letters((self.0 & !deleted) | inserted))
             .unique()
     }
+    pub fn operation_variations<Op>(self) -> impl Iterator<Item = Letters>
+    where
+        Op: super::operations::Operation + LetterVariationsPerOperation,
+    {
+        <Op as LetterVariationsPerOperation>::variations(self)
+    }
 }
+
+crate::base::operations::impl_operation_specific!(
+    _letter_variations,
+    pub trait LetterVariationsPerOperation {
+        (
+            fn variations(letters: Letters) -> impl Iterator<Item = Letters>,
+                insert: { letters.insert_variations() },
+                delete: { letters.delete_variations() },
+                replace: { letters.substitution_variations() }
+        )
+    }
+);
 
 /// Array of powers of two that fit into a [u32].
 /// This is used for iterating over all bits that could be set in a bit mask of [Letters]
@@ -112,3 +130,4 @@ pub const POWERS_OF_TWO: [u32; 32] = [
     1 << 1,
     1 << 0,
 ];
+

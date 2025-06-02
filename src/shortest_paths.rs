@@ -6,8 +6,7 @@ use std::sync::mpsc;
 use itertools::Itertools;
 use petgraph::algo::dijkstra;
 use petgraph::graph::{NodeIndex, UnGraph};
-use rayon::iter::IntoParallelIterator;
-use rayon::iter::ParallelIterator;
+use rayon::prelude::*;
 
 use crate::{MAX_WORD_LEN, Word, WordsOfLength, all_after_one_step};
 
@@ -27,28 +26,37 @@ pub fn find_shortest_paths_from_file(
 
 pub fn find_shortest_paths(comps: impl Iterator<Item = Vec<Word>>, mut outfile: BufWriter<File>) {
     let (tx, rx) = mpsc::channel();
-    let (tx_count, rx_count) = mpsc::channel();
     let writer_thread = std::thread::spawn(move || {
-        while let Ok(node_count) = rx_count.recv() {
+        while let Ok(either::Either::Left((idx, node_count))) = rx.recv() {
             let pb = indicatif::ProgressBar::new(node_count as u64);
             pb.set_style(
             indicatif::ProgressStyle::with_template(
                 "{msg} [{elapsed_precise:.green}] [{wide_bar:.cyan/blue}] {pos}/{len} ({per_sec}, {eta})"
             ).unwrap()
         );
+            if node_count > 200 {
+                pb.set_message(format!("Component {idx}:"));
+            }
 
-            while let Ok(m) = rx.recv() {
-                pb.inc(1);
-                for ((start, target), distance) in m {
-                    outfile
-                        .write_fmt(format_args!("{start};{target};{distance}\t"))
-                        .unwrap();
+            let mut o = false;
+            while let Ok(either::Either::Right(((start, target), distance))) = rx.recv() {
+                if node_count > 200 {
+                    pb.inc(1);
+                }
+                outfile
+                    .write_fmt(format_args!("{start};{target};{distance}\t"))
+                    .unwrap();
+                o = true;
+            }
+            if o {
+                if node_count > 200 {
+                    pb.finish();
                 }
                 outfile.write_fmt(format_args!("\n")).unwrap();
             }
         }
     });
-    for c in comps {
+    for (comp_idx, c) in comps.enumerate() {
         let mut all_words = vec![WordsOfLength::new(); MAX_WORD_LEN + 2];
         let mut g = UnGraph::<Word, ()>::default();
         let mut nodes: HashMap<&Word, NodeIndex> = HashMap::new();
@@ -59,7 +67,8 @@ pub fn find_shortest_paths(comps: impl Iterator<Item = Vec<Word>>, mut outfile: 
                 .push(w.clone());
             nodes.insert(w, g.add_node(w.clone()));
         }
-        tx_count.send(nodes.len()).unwrap();
+        tx.send(either::Either::Left((comp_idx, nodes.len())))
+            .unwrap();
         for w in c.iter() {
             let w_node = nodes[w];
             for one in all_after_one_step(&all_words, &w) {
@@ -67,26 +76,24 @@ pub fn find_shortest_paths(comps: impl Iterator<Item = Vec<Word>>, mut outfile: 
             }
         }
 
-        let shortest_paths = nodes.into_par_iter().map(|(start_word, start_idx)| {
-            dijkstra(&g, start_idx, None, |_| 1)
-                .into_iter()
-                .map(|(target_idx, distance)| {
-                    (
-                        (
-                            start_word.clone(),
-                            g.node_weight(target_idx.clone()).unwrap().clone(),
-                        ),
-                        distance,
-                    )
-                })
-                .collect::<HashMap<_, _>>()
-        });
+        let shortest_paths = nodes
+            .into_par_iter()
+            .map(|(start_word, start_idx)| (start_word, dijkstra(&g, start_idx, None, |_| 1)));
 
-        shortest_paths.for_each(|from_node| {
-            tx.send(from_node).unwrap();
+        shortest_paths.for_each(|(start, reached)| {
+            if reached.len() < 4 {
+                return;
+            }
+            let (target_idx, distance) = reached
+                .iter()
+                .max_by(|(_a, da), (_b, db)| da.cmp(db))
+                .unwrap();
+            let target = g.node_weight(target_idx.clone()).unwrap().clone();
+            tx.send(either::Either::Right(((start.clone(), target), *distance)))
+                .unwrap();
         });
+        tx.send(either::Either::Left((0, 0))).unwrap();
     }
     drop(tx);
-    drop(tx_count);
     writer_thread.join().unwrap();
 }

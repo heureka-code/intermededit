@@ -1,22 +1,17 @@
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
-use crate::base::one_step::{find_after_deletion, find_after_insertion, find_after_substitution};
+use crate::base::one_step::find_after_operation;
+use crate::base::operations;
 use crate::{AllWords, Word};
 
-enum Mode {
-    Insert = 1,
-    Replace = 0,
-    Delete = -1,
-}
-
 macro_rules! find_variant {
-    ($name: ident, $label: expr, $function: ident, $mode: expr) => {
+    ($name: ident, $mode: ty) => {
     pub fn $name(all_words: &AllWords, len: usize) -> std::io::Result<()> {
-        let target_len = (len as i32) + ($mode as i32);
+        let target_len = (len as i32) + (<$mode as $crate::base::operations::Operation>::len_delta());
         let bucket = &all_words[len];
         let pb = indicatif::ProgressBar::no_length();
-        let file = File::create_new(format!("{}-{len:02}-{target_len:02}.txt", $label))?;
+        let file = File::create_new(format!("{}-{len:02}-{target_len:02}.txt", <$mode as $crate::base::operations::Operation>::lowercase_label()))?;
         let mut buffered = BufWriter::new(file);
 
         pb.set_style(
@@ -28,7 +23,7 @@ macro_rules! find_variant {
         pb.set_message(format!("{len:02}->{target_len:02}: "));
 
         for (s, t) in bucket.values().flatten().flat_map(|start: &Word| {
-            $function(all_words, start).map(move |target| (start, target))
+            find_after_operation::<$mode>(all_words, start).map(move |target| (start, target))
         }) {
             if s != t {
                 pb.inc(1);
@@ -41,21 +36,6 @@ macro_rules! find_variant {
     };
 }
 
-find_variant!(
-    edges_for_substitution,
-    "replace",
-    find_after_substitution,
-    Mode::Replace
-);
-find_variant!(
-    edges_for_insertion,
-    "insert",
-    find_after_insertion,
-    Mode::Insert
-);
-find_variant!(
-    edges_for_deletion,
-    "delete",
-    find_after_deletion,
-    Mode::Delete
-);
+find_variant!(edges_for_substitution, operations::Replace);
+find_variant!(edges_for_insertion, operations::Insert);
+find_variant!(edges_for_deletion, operations::Delete);

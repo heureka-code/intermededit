@@ -95,7 +95,7 @@ fn run_example_tasks_in_parallel(all_words: &AllWords, tasks: &[(&str, &str)]) {
     let start = Instant::now();
     let _i: Vec<_> = tasks
         .par_iter()
-        .map(|(start, target)| solution(all_words, start, 10, target))
+        .map(|(start, target)| solution(all_words, start, 100, target))
         .collect();
     println!(
         "Time taken for completing the tasks (time for creating wordlist excluded): {:?}",
@@ -113,12 +113,13 @@ fn do_timed_way_generation_benchmark(all_words: &AllWords, tasks: &[(&str, &str)
     println!("Time taken only for generating ways: {:?}", start.elapsed());
 }
 
-const TASKS: [(&str, &str); 5] = [
+const TASKS: [(&str, &str); 6] = [
     ("Herz", "rasen"),
     ("Bier", "Leber"),
     ("blau", "Alge"),
     ("Rhein", "raus"),
     ("Eis", "kalt"),
+    ("Zurufender", "Inschriften"),
 ];
 
 fn main() {
@@ -129,18 +130,19 @@ fn main() {
         start.elapsed()
     );
 
-    intermededit::shortest_paths::find_shortest_paths_from_file(
-        "single-components-maxint.txt",
-        BufWriter::new(File::create_new("shortest_paths.txt").unwrap()),
-    )
-    .unwrap();
+    //intermededit::shortest_paths::find_shortest_paths_from_file(
+    //    "single-components-maxint.txt",
+    //    BufWriter::new(File::create_new("shortest_paths.txt").unwrap()),
+    //)
+    //.unwrap();
 
     run_example_tasks_in_parallel(&by_length, &TASKS);
 
-    visual_classify_words_exhaustive(
-        by_length,
-        BufWriter::new(File::create_new("single-components-maxint.txt").unwrap()),
-    );
+    //visual_classify_words_exhaustive(
+    //    by_length,
+    //    BufWriter::new(File::create_new("single-components-maxint.txt").unwrap()),
+    //);
+
     // concurrent_edge_file_creation(&by_length);
 
     // do_timed_way_generation_benchmark(&by_length, &TASKS);

@@ -1,5 +1,10 @@
+mod len_let_bucket;
 mod letters;
 pub mod one_step;
+#[macro_use]
+pub mod operations;
+#[macro_use]
+mod operations_macro;
 mod word;
 
 pub use letters::Letters;
