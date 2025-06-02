@@ -7,4 +7,3 @@ pub mod word;
 
 pub use letters::Letters;
 pub use word::Word;
-

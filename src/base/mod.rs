@@ -1,13 +1,13 @@
-pub mod model;
 mod len_let_bucket;
+pub mod model;
 pub mod one_step;
 
 mod len_let_wordlist;
 pub use len_let_bucket::LenLetWordBuckets;
 pub use len_let_wordlist::LenLetWordlist;
 
-pub use one_step::all_after_one_step;
 pub use model::{Letters, Word, operations};
+pub use one_step::all_after_one_step;
 
 pub type AllWords = len_let_wordlist::LenLetWordlist;
 

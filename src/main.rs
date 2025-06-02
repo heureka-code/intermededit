@@ -5,7 +5,7 @@ use std::{
 
 mod visual_component_classification;
 
-use intermededit::*;
+use intermededit::{operations::{Delete, Insert, Replace}, *};
 use itertools::Itertools;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
@@ -62,7 +62,7 @@ fn concurrent_edge_file_creation(all_words: &AllWords) {
         let all_words = all_words.clone();
         move || {
             for len in 0..MAX_WORD_LEN {
-                edges_for_insertion(&all_words, len).unwrap();
+                edges_for_operation::<Insert>(&all_words, len).unwrap();
             }
         }
     });
@@ -70,7 +70,7 @@ fn concurrent_edge_file_creation(all_words: &AllWords) {
         let all_words = all_words.clone();
         move || {
             for len in 1..MAX_WORD_LEN {
-                edges_for_deletion(&all_words, len).unwrap();
+                edges_for_operation::<Delete>(&all_words, len).unwrap();
             }
         }
     });
@@ -78,7 +78,7 @@ fn concurrent_edge_file_creation(all_words: &AllWords) {
         let all_words = all_words.clone();
         move || {
             for len in 0..MAX_WORD_LEN {
-                edges_for_substitution(&all_words, len).unwrap();
+                edges_for_operation::<Replace>(&all_words, len).unwrap();
             }
         }
     });
