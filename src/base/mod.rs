@@ -5,32 +5,19 @@ pub mod one_step;
 pub mod operations;
 #[macro_use]
 mod operations_macro;
+mod len_let_wordlist;
 mod word;
+pub use len_let_bucket::LenLetWordBuckets;
+pub use len_let_wordlist::LenLetWordlist;
 
 pub use letters::Letters;
 pub use one_step::all_after_one_step;
 pub use word::Word;
 
-pub type WordsOfLength = std::collections::HashMap<Letters, Vec<Word>>;
-pub type AllWords = Vec<WordsOfLength>;
+pub type AllWords = len_let_wordlist::LenLetWordlist;
 
-pub fn get_any_word(all_words: &AllWords) -> Option<&Word> {
-    all_words.iter().flat_map(|b| b.values()).flatten().next()
-}
-pub fn get_word_count(all_words: &AllWords) -> usize {
-    all_words.iter().flat_map(|b| b.values()).flatten().count()
-}
-pub fn remove_iter_from_words<'a>(
-    all_words: &mut AllWords,
-    to_remove: impl Iterator<Item = &'a Word>,
-) {
-    use itertools::Itertools;
-    for w in to_remove {
-        let (len, letters) = (w.len(), w.calc_letters());
-        if let Some(buc) = all_words[len].get_mut(&letters) {
-            if let Some((pos, _)) = buc.iter().find_position(|a| a == &w) {
-                buc.remove(pos);
-            }
-        }
-    }
+pub trait WordlistExt {
+    fn get_any_word(&self) -> Option<&Word>;
+    fn get_word_count(&self) -> usize;
+    fn remove_iter_from_words<'a>(&mut self, to_remove: impl Iterator<Item = &'a Word>);
 }

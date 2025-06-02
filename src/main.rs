@@ -1,12 +1,9 @@
 use std::{
     collections::{HashMap, HashSet},
-    fs::File,
-    io::BufWriter,
     time::Instant,
 };
 
 mod visual_component_classification;
-use visual_component_classification::visual_classify_words_exhaustive;
 
 use intermededit::*;
 use itertools::Itertools;
@@ -49,7 +46,7 @@ fn solution(by_length: &AllWords, start: &str, max_distance: usize, target: &str
 
 #[allow(unused)]
 fn print_len_histogram(by_length: &AllWords) {
-    for (ind, h) in by_length.iter().enumerate() {
+    for (ind, h) in by_length.iter_lengths().enumerate() {
         println!(
             "{ind:02} {} on {}",
             h.values().flatten().count(),

@@ -12,20 +12,12 @@ use std::sync::Arc;
 /// This implementation assigns each letter a bit by considering only the least significant five
 /// bits and uses them for shifting 1 one as [`u32`].
 ///
-#[derive(Debug, Display, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, From, Into)]
+#[derive(Debug, Default, Display, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, From, Into)]
 #[display("{uppercase}")]
 pub struct Word {
     uppercase: Arc<str>,
     #[cfg(feature = "cache-letters")]
     letters: Letters,
-}
-
-impl Default for Word {
-    fn default() -> Self {
-        Self {
-            uppercase: Default::default(),
-        }
-    }
 }
 
 #[allow(clippy::len_without_is_empty)]

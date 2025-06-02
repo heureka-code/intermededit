@@ -1,10 +1,11 @@
+use intermededit::base::WordlistExt;
 use std::io::Write;
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread::JoinHandle;
 use std::{collections::HashSet, fs::File, io::BufWriter};
 
 use intermededit::components::*;
-use intermededit::{AllWords, Word, get_word_count};
+use intermededit::{AllWords, Word};
 use itertools::Itertools;
 
 fn classify_words_file_writer_thread(
@@ -54,7 +55,7 @@ fn visual_classify_words_helper(
     single_components: BufWriter<File>,
     too_big_components: Option<BufWriter<File>>,
 ) {
-    let total_word_count = get_word_count(&all_words);
+    let total_word_count = all_words.get_word_count();
 
     let (single_complete_thread, big_unknown_thread, pb_thread) = {
         let (tx_progress, rx_progress) = std::sync::mpsc::channel::<(ComponentAnalysis, usize)>();

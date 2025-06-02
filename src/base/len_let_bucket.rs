@@ -2,9 +2,7 @@ use std::collections::HashMap;
 
 use crate::MAX_WORD_LEN;
 
-use super::{Letters, Word};
-
-pub type AllWords = LenLetWordBuckets<Vec<Word>>;
+use super::Letters;
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct LenLetWordBuckets<T> {
@@ -51,6 +49,9 @@ impl<T> LenLetWordBuckets<T> {
     pub fn iter_len_values(&self, len: usize) -> impl Iterator<Item = &T> {
         self.buckets[len].values()
     }
+    pub fn iter_lengths(&self) -> impl Iterator<Item = &HashMap<Letters, T>> {
+        self.buckets.iter()
+    }
 
     /// If the stored generic type is iterable this will iterate over the items
     /// yielded by the instance stored for the given length and [Letters] instance.
@@ -92,5 +93,9 @@ impl<T> LenLetWordBuckets<T> {
         self.buckets[len]
             .iter()
             .flat_map(|(l, t)| t.into_iter().map(move |i| (l, i)))
+    }
+
+    pub fn get_for_len(&self, len: usize) -> &HashMap<Letters, T> {
+        &self.buckets[len]
     }
 }

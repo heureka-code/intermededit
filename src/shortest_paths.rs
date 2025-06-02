@@ -8,7 +8,8 @@ use petgraph::algo::dijkstra;
 use petgraph::graph::{NodeIndex, UnGraph};
 use rayon::prelude::*;
 
-use crate::{MAX_WORD_LEN, Word, WordsOfLength, all_after_one_step};
+use crate::base::LenLetWordlist;
+use crate::{Word, all_after_one_step};
 
 pub fn find_shortest_paths_from_file(
     filename: &str,
@@ -18,7 +19,7 @@ pub fn find_shortest_paths_from_file(
 
     let it = content
         .lines()
-        .map(|line| line.split("\t").map(|f| Word::new(f)).collect_vec());
+        .map(|line| line.split("\t").map(Word::new).collect_vec());
     find_shortest_paths(it, outfile);
 
     Ok(())
@@ -57,21 +58,18 @@ pub fn find_shortest_paths(comps: impl Iterator<Item = Vec<Word>>, mut outfile: 
         }
     });
     for (comp_idx, c) in comps.enumerate() {
-        let mut all_words = vec![WordsOfLength::new(); MAX_WORD_LEN + 2];
+        let mut all_words = LenLetWordlist::default();
         let mut g = UnGraph::<Word, ()>::default();
         let mut nodes: HashMap<&Word, NodeIndex> = HashMap::new();
         for w in c.iter() {
-            all_words[w.len()]
-                .entry(w.calc_letters())
-                .or_default()
-                .push(w.clone());
+            all_words.insert_new(w.clone());
             nodes.insert(w, g.add_node(w.clone()));
         }
         tx.send(either::Either::Left((comp_idx, nodes.len())))
             .unwrap();
         for w in c.iter() {
             let w_node = nodes[w];
-            for one in all_after_one_step(&all_words, &w) {
+            for one in all_after_one_step(&all_words, w) {
                 g.add_edge(w_node, nodes[one], ());
             }
         }
@@ -88,7 +86,7 @@ pub fn find_shortest_paths(comps: impl Iterator<Item = Vec<Word>>, mut outfile: 
                 .iter()
                 .max_by(|(_a, da), (_b, db)| da.cmp(db))
                 .unwrap();
-            let target = g.node_weight(target_idx.clone()).unwrap().clone();
+            let target = g.node_weight(*target_idx).unwrap().clone();
             tx.send(either::Either::Right(((start.clone(), target), *distance)))
                 .unwrap();
         });

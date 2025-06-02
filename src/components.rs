@@ -40,9 +40,9 @@ pub fn classify_words_into_components(
     tx_single: Sender<HashSet<Word>>,
     tx_unknown: Sender<HashSet<Word>>,
 ) {
-    while let Some(start) = get_any_word(&all_words).cloned() {
+    while let Some(start) = all_words.get_any_word().cloned() {
         let (reached, analysis) = limited_component_classification(&all_words, start, max_distance);
-        remove_iter_from_words(&mut all_words, reached.iter());
+        all_words.remove_iter_from_words(reached.iter());
         match analysis {
             ComponentAnalysis::DefinitlyComplete => tx_single.send(reached).unwrap(),
             ComponentAnalysis::TooBig => tx_unknown.send(reached).unwrap(),
