@@ -9,6 +9,7 @@ pub use base::AllWords;
 pub use base::Letters;
 pub use base::Word;
 pub use base::WordsOfLength;
+pub use base::operations;
 
 pub const MAX_WORD_LEN: usize = 50;
 pub use base::all_after_one_step;

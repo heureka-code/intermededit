@@ -130,4 +130,3 @@ pub const POWERS_OF_TWO: [u32; 32] = [
     1 << 1,
     1 << 0,
 ];
-

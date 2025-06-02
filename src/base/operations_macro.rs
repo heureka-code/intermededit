@@ -66,4 +66,3 @@ macro_rules! impl_operation_specific {
     };
 }
 pub(crate) use impl_operation_specific;
-
