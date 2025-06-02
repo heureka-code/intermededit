@@ -1,4 +1,4 @@
-use super::letters::LetterVariationsPerOperation;
+use super::model::letters::LetterVariationsPerOperation;
 use super::operations::{self, Delete, Insert, Replace};
 use super::{AllWords, Word};
 
