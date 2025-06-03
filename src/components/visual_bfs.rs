@@ -41,11 +41,8 @@ pub fn bfs_visual_classify_words_exhaustive(
         let (tx_single, rx_single) = std::sync::mpsc::channel::<HashSet<Word>>();
 
         let pb_thread = classify_word_progress_bar_thread(total_word_count as u64, rx_progress);
-        let single_complete_thread = classify_words_file_writer_thread(
-            single_components,
-            rx_single,
-            tx_progress.clone(),
-        );
+        let single_complete_thread =
+            classify_words_file_writer_thread(single_components, rx_single, tx_progress.clone());
         BfsWordComponentClassification::new_max()
             .classify_words_into_components(all_words, tx_single)
             .expect("No too big components");
@@ -74,9 +71,7 @@ fn classify_word_progress_bar_thread(
             complete += count;
             buckets += 1;
             pb.inc(count as u64);
-            pb.set_message(format!(
-                "complete: {complete} in {buckets}"
-            ));
+            pb.set_message(format!("complete: {complete} in {buckets}"));
         }
         pb.finish();
     })

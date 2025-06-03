@@ -1,6 +1,6 @@
 use std::{collections::HashMap, ops::Index};
 
-use super::{LenLetWordBuckets, Letters, Word, WordlistExt};
+use super::{AnyBucketWordlist, LenLetWordBuckets, Letters, Word, WordlistExt};
 
 #[derive(Debug, Default, PartialEq, Eq, Clone)]
 pub struct LenLetWordlist(LenLetWordBuckets<Vec<Word>>);
@@ -20,6 +20,7 @@ impl LenLetWordlist {
 }
 
 impl WordlistExt for LenLetWordlist {
+    type W = Word;
     fn get_any_word(&self) -> Option<&Word> {
         self.iter_all().next()
     }
@@ -43,5 +44,14 @@ impl Index<usize> for LenLetWordlist {
     type Output = HashMap<Letters, Vec<Word>>;
     fn index(&self, index: usize) -> &Self::Output {
         self.0.get_for_len(index)
+    }
+}
+
+impl AnyBucketWordlist for LenLetWordlist {
+    type W = Word;
+    // type InnerCollection = Vec<Word>;
+    //
+    fn words_of_bucket(&self, len: usize, letters: Letters) -> impl Iterator<Item = &Self::W> {
+        self.0.i_iter(len, letters)
     }
 }

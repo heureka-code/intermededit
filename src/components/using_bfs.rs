@@ -2,7 +2,6 @@ use std::{collections::HashSet, sync::mpsc::Sender};
 
 use crate::{AllWords, Word, all_after_one_step, base::*};
 
-
 // panic!("More steps would be needed than possible (usize::MAX) steps were tried.")
 #[derive(Debug, thiserror::Error, derive_more::Display)]
 #[display("The step limit of {limit} is exceeded.")]
@@ -34,16 +33,21 @@ fn limited_component_classification(
             return Ok(reached);
         }
     }
-    Err(GraphIsTooBigForComponentAnalysis { reached, limit: max_distance })
+    Err(GraphIsTooBigForComponentAnalysis {
+        reached,
+        limit: max_distance,
+    })
 }
 
 pub struct BfsWordComponentClassification {
-    max_distance: usize
+    max_distance: usize,
 }
 
 impl BfsWordComponentClassification {
     pub fn new_max() -> Self {
-        Self { max_distance: usize::MAX }
+        Self {
+            max_distance: usize::MAX,
+        }
     }
     pub fn classify_words_into_components(
         &self,
@@ -58,4 +62,3 @@ impl BfsWordComponentClassification {
         Ok(())
     }
 }
-

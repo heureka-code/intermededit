@@ -1,8 +1,14 @@
 use std::{
-    collections::{HashMap, HashSet}, thread::JoinHandle, time::Instant
+    collections::{HashMap, HashSet},
+    thread::JoinHandle,
+    time::Instant,
 };
 
-use intermededit::{base::{model::letters::LetterVariationsPerOperation, one_step::FilterWordsForOperation}, operations::{Delete, Insert, Replace}, *};
+use intermededit::{
+    base::{model::letters::LetterVariationsPerOperation, one_step::FilterWordsForOperation},
+    operations::{Delete, Insert, Replace},
+    *,
+};
 use itertools::Itertools;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
@@ -56,10 +62,11 @@ fn print_len_histogram(by_length: &AllWords) {
 fn concurrent_edge_file_creation(all_words: &AllWords) {
     use edge_generation::*;
 
-    fn generate_thread<Op: FilterWordsForOperation + LetterVariationsPerOperation>(all_words: &AllWords) -> JoinHandle<()> {
+    fn generate_thread<Op: FilterWordsForOperation + LetterVariationsPerOperation>(
+        all_words: &AllWords,
+    ) -> JoinHandle<()> {
         let all_words = all_words.clone();
-        std::thread::spawn(
-        move || {
+        std::thread::spawn(move || {
             for len in 0..MAX_WORD_LEN {
                 edges_for_operation::<Op>(&all_words, len).unwrap();
             }

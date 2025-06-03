@@ -58,12 +58,12 @@ impl<T> LenLetWordBuckets<T> {
     /// If no value is stored for the arguments the iterator will be empty.
     ///
     /// (stands for _inner_ iter)
-    pub fn i_iter<'a, I>(&'a self, len: usize, letters: &Letters) -> impl Iterator<Item = I>
+    pub fn i_iter<'a, I>(&'a self, len: usize, letters: Letters) -> impl Iterator<Item = I>
     where
         &'a T: IntoIterator<Item = I>,
     {
         self.buckets[len]
-            .get(letters)
+            .get(&letters)
             .map(|t| t.into_iter())
             .into_iter()
             .flatten()

@@ -6,7 +6,9 @@ use crate::base::one_step::{FilterWordsForOperation, find_after_operation};
 use crate::operations::Operation;
 use crate::{AllWords, Word};
 
-pub fn edges_for_operation<Op: Operation + FilterWordsForOperation + LetterVariationsPerOperation>(
+pub fn edges_for_operation<
+    Op: Operation + FilterWordsForOperation + LetterVariationsPerOperation,
+>(
     all_words: &AllWords,
     len: usize,
 ) -> std::io::Result<()> {
@@ -28,7 +30,7 @@ pub fn edges_for_operation<Op: Operation + FilterWordsForOperation + LetterVaria
     pb.set_message(format!("{len:02}->{target_len:02}: "));
 
     for (s, t) in bucket.values().flatten().flat_map(|start: &Word| {
-        find_after_operation::<Op>(all_words, start).map(move |target| (start, target))
+        find_after_operation::<Op, AllWords>(all_words, start).map(move |target| (start, target))
     }) {
         if s != t {
             pb.inc(1);
