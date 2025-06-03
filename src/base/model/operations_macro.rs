@@ -27,27 +27,27 @@ macro_rules! impl_operation_specific {
         }
     };
 
-    (singsignature: $(#[doc = $gen_doc: expr])* fn $name: ident$(<$($generics: tt)*>)?($($param: ident: $type: ty),*$(,)?) -> $return: ty,
+    (singsignature: $(#[doc = $gen_doc: expr])* fn $name: ident$({$($generics: tt)*})?($($param: ident: $type: ty),*$(,)?) -> $return: ty,
             $(#[doc = $ins_doc: expr])* insert: $ins: block, $(#[doc = $del_doc: expr])* delete: $del: block, $(#[doc = $subs_doc: expr])* replace: $subs: block $(,)?) => {
         $(#[doc = $gen_doc])*
         fn $name$(<$($generics)*>)?($($param: $type),*) -> $return;
     };
 
-    (singinsert: $(#[doc = $gen_doc: expr])* fn $name: ident$(<$($generics: tt)*>)?($($param: ident: $type: ty),*$(,)?) -> $return: ty,
+    (singinsert: $(#[doc = $gen_doc: expr])* fn $name: ident$({$($generics: tt)*})?($($param: ident: $type: ty),*$(,)?) -> $return: ty,
             $(#[doc = $ins_doc: expr])* insert: $ins: block, $(#[doc = $del_doc: expr])* delete: $del: block, $(#[doc = $subs_doc: expr])* replace: $subs: block $(,)?) => {
         $crate::base::operations::impl_operation_specific!(docs: $(#[doc = $gen_doc])* : $(#[doc = $ins_doc])* :
             fn $name$(<$($generics)*>)?($($param: $type),*) -> $return { $ins }
         );
     };
 
-    (singdelete: $(#[doc = $gen_doc: expr])* fn $name: ident$(<$($generics: tt)*>)?($($param: ident: $type: ty),*$(,)?) -> $return: ty,
+    (singdelete: $(#[doc = $gen_doc: expr])* fn $name: ident$({$($generics: tt)*})?($($param: ident: $type: ty),*$(,)?) -> $return: ty,
             $(#[doc = $ins_doc: expr])* insert: $ins: block, $(#[doc = $del_doc: expr])* delete: $del: block, $(#[doc = $subs_doc: expr])* replace: $subs: block $(,)?) => {
         $crate::base::operations::impl_operation_specific!(docs: $(#[doc = $gen_doc])* : $(#[doc = $del_doc])* :
             fn $name$(<$($generics)*>)?($($param: $type),*) -> $return { $del }
         );
     };
 
-    (singreplace: $(#[doc = $gen_doc: expr])* fn $name: ident$(<$($generics: tt)*>)?($($param: ident: $type: ty),*$(,)?) -> $return: ty,
+    (singreplace: $(#[doc = $gen_doc: expr])* fn $name: ident$({$($generics: tt)*})?($($param: ident: $type: ty),*$(,)?) -> $return: ty,
             $(#[doc = $ins_doc: expr])* insert: $ins: block, $(#[doc = $del_doc: expr])* delete: $del: block, $(#[doc = $subs_doc: expr])* replace: $subs: block $(,)?) => {
         $crate::base::operations::impl_operation_specific!(docs: $(#[doc = $gen_doc])* : $(#[doc = $subs_doc])* :
             fn $name$(<$($generics)*>)?($($param: $type),*) -> $return { $subs }
