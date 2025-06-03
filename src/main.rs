@@ -1,11 +1,8 @@
 use std::{
-    collections::{HashMap, HashSet},
-    time::Instant,
+    collections::{HashMap, HashSet}, thread::JoinHandle, time::Instant
 };
 
-mod visual_component_classification;
-
-use intermededit::{operations::{Delete, Insert, Replace}, *};
+use intermededit::{base::{model::letters::LetterVariationsPerOperation, one_step::FilterWordsForOperation}, operations::{Delete, Insert, Replace}, *};
 use itertools::Itertools;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
@@ -58,30 +55,19 @@ fn print_len_histogram(by_length: &AllWords) {
 #[allow(unused)]
 fn concurrent_edge_file_creation(all_words: &AllWords) {
     use edge_generation::*;
-    let i = std::thread::spawn({
+
+    fn generate_thread<Op: FilterWordsForOperation + LetterVariationsPerOperation>(all_words: &AllWords) -> JoinHandle<()> {
         let all_words = all_words.clone();
+        std::thread::spawn(
         move || {
             for len in 0..MAX_WORD_LEN {
-                edges_for_operation::<Insert>(&all_words, len).unwrap();
+                edges_for_operation::<Op>(&all_words, len).unwrap();
             }
-        }
-    });
-    let d = std::thread::spawn({
-        let all_words = all_words.clone();
-        move || {
-            for len in 1..MAX_WORD_LEN {
-                edges_for_operation::<Delete>(&all_words, len).unwrap();
-            }
-        }
-    });
-    let r = std::thread::spawn({
-        let all_words = all_words.clone();
-        move || {
-            for len in 0..MAX_WORD_LEN {
-                edges_for_operation::<Replace>(&all_words, len).unwrap();
-            }
-        }
-    });
+        })
+    }
+    let i = generate_thread::<Insert>(all_words);
+    let d = generate_thread::<Delete>(all_words);
+    let r = generate_thread::<Replace>(all_words);
 
     i.join().unwrap();
     d.join().unwrap();
