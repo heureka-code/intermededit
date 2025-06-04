@@ -1,3 +1,4 @@
+#![allow(unused)]
 use std::{
     collections::{HashMap, HashSet},
     thread::JoinHandle,
@@ -5,12 +6,15 @@ use std::{
 };
 
 use intermededit::{
-    base::{model::letters::LetterVariationsPerOperation, one_step::FilterWordsForOperation},
+    base::LetterVariationsPerOperation,
+    components::union_find_classify_words_into_components,
     operations::{Delete, Insert, Replace},
+    step_generation::FilterWordsForOperation,
     *,
 };
 use itertools::Itertools;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use union_find::UnionFind;
 
 fn visual_benchmark_without_stopping(by_length: &AllWords, start: Word, max_distance: usize) {
     let mut reached_from = HashMap::<Word, Word>::new();
@@ -115,10 +119,26 @@ const TASKS: [(&str, &str); 6] = [
 fn main() {
     let start = Instant::now();
     let by_length = read_wordlist("wordlist-german.txt").expect("Wordlist file");
-    println!(
-        "Time taken for reading file and precomputing bitmasks of wordlist: {:?}",
-        start.elapsed()
-    );
+    //println!(
+    //    "Time taken for reading file and precomputing bitmasks of wordlist: {:?}",
+    //    start.elapsed()
+    //);
+
+    let mut uf = union_find_classify_words_into_components(&by_length);
+    // println!("finished");
+    let comps = (0..uf.size())
+        .map(|node| {
+            (
+                uf.find(node),
+                by_length.word_for_tag(&node).unwrap().clone(),
+            )
+        })
+        .into_group_map();
+
+    for (_, d) in comps {
+        let line = d.iter().sorted().join("\t");
+        println!("{line}");
+    }
 
     //intermededit::shortest_paths::find_shortest_paths_from_file(
     //    "single-components-maxint.txt",
@@ -126,7 +146,7 @@ fn main() {
     //)
     //.unwrap();
 
-    run_example_tasks_in_parallel(&by_length, &TASKS);
+    // run_example_tasks_in_parallel(&by_length, &TASKS);
 
     //visual_classify_words_exhaustive(
     //    by_length,

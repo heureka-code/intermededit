@@ -8,7 +8,8 @@ use petgraph::algo::dijkstra;
 use petgraph::graph::{NodeIndex, UnGraph};
 use rayon::prelude::*;
 
-use crate::base::LenLetWordlist;
+use crate::base::InsertWordbucketList;
+use crate::wordbucket_impls::LenLetWordlist;
 use crate::{Word, all_after_one_step};
 
 pub fn find_shortest_paths_from_file(

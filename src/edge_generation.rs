@@ -1,9 +1,9 @@
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
-use crate::base::model::letters::LetterVariationsPerOperation;
-use crate::base::one_step::{FilterWordsForOperation, find_after_operation};
+use crate::base::LetterVariationsPerOperation;
 use crate::operations::Operation;
+use crate::step_generation::{FilterWordsForOperation, find_after_operation};
 use crate::{AllWords, Word};
 
 pub fn edges_for_operation<

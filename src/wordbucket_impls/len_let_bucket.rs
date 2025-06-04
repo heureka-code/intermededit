@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::MAX_WORD_LEN;
 
-use super::Letters;
+use crate::base::Letters;
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct LenLetWordBuckets<T> {

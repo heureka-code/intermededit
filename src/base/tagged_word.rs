@@ -15,6 +15,12 @@ impl<T> TaggedWord<T> {
     }
 }
 
+impl<T: Copy> TaggedWord<T> {
+    pub fn ctag(&self) -> T {
+        self.tag
+    }
+}
+
 impl<T> HasWord for TaggedWord<T> {
     fn word(&self) -> &Word {
         &self.word

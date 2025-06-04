@@ -5,14 +5,16 @@ pub mod components;
 pub mod edge_generation;
 mod read;
 pub mod shortest_paths;
-pub use base::AllWords;
+pub mod step_generation;
+pub mod wordbucket_impls;
 pub use base::Letters;
 pub use base::Word;
 pub use base::operations;
+pub use wordbucket_impls::AllWords;
 
 pub const MAX_WORD_LEN: usize = 50;
-pub use base::all_after_one_step;
 pub use read::read_wordlist;
+pub use step_generation::all_after_one_step;
 
 pub fn find_way(
     by_length: &AllWords,

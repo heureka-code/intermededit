@@ -1,4 +1,4 @@
-use crate::base::WordlistExt;
+use crate::base::QueryableWordbucketList;
 use std::io::Write;
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread::JoinHandle;
