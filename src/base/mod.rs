@@ -12,7 +12,7 @@ pub use has_word::HasWord;
 pub use letters::{LetterVariationsPerOperation, Letters};
 pub use tagged_word::TaggedWord;
 pub use word::Word;
-pub use wordlist_kinds::{InsertWordbucketList, QueryableWordbucketList};
+pub use wordlist_kinds::{InsertNewIntoWordbucketList, QueryableWordbucketList};
 
 pub trait WordlistExt {
     type W: HasWord;

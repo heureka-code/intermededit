@@ -14,6 +14,6 @@ pub trait QueryableWordbucketList {
     }
 }
 
-pub trait InsertWordbucketList<Insertable> {
+pub trait InsertNewIntoWordbucketList<Insertable> {
     fn insert_new(&mut self, word: Insertable);
 }

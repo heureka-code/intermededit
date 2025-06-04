@@ -1,7 +1,7 @@
 use std::{collections::HashMap, hash::Hash, ops::Index};
 
 use super::LenLetWordBuckets;
-use crate::base::{HasWord, InsertWordbucketList, Letters, QueryableWordbucketList, TaggedWord, Word, WordlistExt};
+use crate::base::{HasWord, InsertNewIntoWordbucketList, Letters, QueryableWordbucketList, TaggedWord, Word, WordlistExt};
 
 #[derive(Debug, Default, Clone)]
 pub struct TaggedLenLetWordlist<T>(LenLetWordBuckets<Vec<TaggedWord<T>>>, HashMap<T, Word>);

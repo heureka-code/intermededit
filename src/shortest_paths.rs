@@ -8,7 +8,7 @@ use petgraph::algo::dijkstra;
 use petgraph::graph::{NodeIndex, UnGraph};
 use rayon::prelude::*;
 
-use crate::base::InsertWordbucketList;
+use crate::base::InsertNewIntoWordbucketList;
 use crate::wordbucket_impls::LenLetWordlist;
 use crate::{Word, all_after_one_step};
 

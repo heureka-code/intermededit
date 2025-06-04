@@ -4,7 +4,7 @@ use derive_more::Deref;
 
 use super::LenLetWordBuckets;
 use crate::base::{
-    HasWord, InsertWordbucketList, Letters, QueryableWordbucketList, TaggedWord, Word,
+    HasWord, InsertNewIntoWordbucketList, Letters, QueryableWordbucketList, TaggedWord, Word,
 };
 
 #[derive(Debug, Deref, Clone, PartialEq)]
@@ -43,11 +43,11 @@ impl QueryableWordbucketList for NumberedLenLetWordlist {
         self.buckets.i_iter_all()
     }
 }
-impl InsertWordbucketList<Word> for NumberedLenLetWordlist {
+impl InsertNewIntoWordbucketList<Word> for NumberedLenLetWordlist {
     fn insert_new(&mut self, word: Word) {
         self.tag_map.insert(self.index, word.clone());
         self.buckets
-            .get_or_default(self.index, word.calc_letters())
+            .get_or_default(word.len(), word.calc_letters())
             .push(NumberedWord(TaggedWord::new(self.index, word)));
         self.index += 1;
     }

@@ -1,12 +1,12 @@
 use std::{collections::HashMap, ops::Index};
 
 use super::LenLetWordBuckets;
-use crate::base::{InsertWordbucketList, Letters, QueryableWordbucketList, Word, WordlistExt};
+use crate::base::{InsertNewIntoWordbucketList, Letters, QueryableWordbucketList, Word, WordlistExt};
 
 #[derive(Debug, Default, PartialEq, Eq, Clone)]
 pub struct LenLetWordlist(LenLetWordBuckets<Vec<Word>>);
 
-impl InsertWordbucketList<Word> for LenLetWordlist {
+impl InsertNewIntoWordbucketList<Word> for LenLetWordlist {
     fn insert_new(&mut self, word: Word) {
         self.0
             .get_or_default(word.len(), word.calc_letters())

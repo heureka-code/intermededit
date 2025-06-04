@@ -1,8 +1,8 @@
 use crate::MAX_WORD_LEN;
 use crate::Word;
-use crate::base::InsertWordbucketList;
+use crate::base::InsertNewIntoWordbucketList;
 
-pub fn read_wordlist<L: InsertWordbucketList<Word> + Default>(
+pub fn read_wordlist<L: InsertNewIntoWordbucketList<Word> + Default>(
     filename: &str,
 ) -> std::io::Result<L> {
     use std::io::prelude::*;
