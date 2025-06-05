@@ -1,7 +1,19 @@
 pub(crate) use super::operations_macro::impl_operation_specific;
 
+/// Marker type for insertion operations on a word.
+/// As this type is an enum without variants no instances of this type can be created.
+/// Therefore it's only for compile time selection of implementations and shouldn't
+/// slow down the runtime performance.
 pub enum Insert {}
+/// Marker type for replacement operations on a word.
+/// As this type is an enum without variants no instances of this type can be created.
+/// Therefore it's only for compile time selection of implementations and shouldn't
+/// slow down the runtime performance.
 pub enum Replace {}
+/// Marker type for deletion operations on a word.
+/// As this type is an enum without variants no instances of this type can be created.
+/// Therefore it's only for compile time selection of implementations and shouldn't
+/// slow down the runtime performance.
 pub enum Delete {}
 
 impl_operation_specific!(
