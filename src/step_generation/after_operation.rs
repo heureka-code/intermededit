@@ -9,7 +9,7 @@ pub fn find_after_operation<
     Op: Operation + FilterWordsForOperation + LetterVariationsPerOperation,
     L,
 >(
-    by_length: &'a L,
+    all_words: &'a L,
     word: &'a impl HasWord,
 ) -> impl Iterator<Item = &'a <L as QueryableWordbucketList>::W>
 where
@@ -19,7 +19,7 @@ where
     let target_length = (w.len() as i32 + Op::len_delta()) as usize;
     w.calc_letters()
         .operation_variations::<Op>()
-        .flat_map(move |letter_mask| by_length.words_of_bucket(target_length, letter_mask))
+        .flat_map(move |letter_mask| all_words.words_of_bucket(target_length, letter_mask))
         .filter(move |other| <Op as FilterWordsForOperation>::filter_for_operation(w, *other))
 }
 
