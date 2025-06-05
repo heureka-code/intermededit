@@ -1,4 +1,7 @@
 Code documentation: [https://heureka-code.github.io/intermededit](https://heureka-code.github.io/intermededit)
+Repository: [https://github.com/heureka-code/intermededit](https://github.com/heureka-code/intermededit)
+
+[![Deploy documentation to GitHub Pages](https://github.com/heureka-code/intermededit/actions/workflows/deploy-docs-to-pages.yml/badge.svg)](https://github.com/heureka-code/intermededit/actions/workflows/deploy-docs-to-pages.yml)
 
 
 ## First version using subtraction of b'A' from u8 repr of characters
