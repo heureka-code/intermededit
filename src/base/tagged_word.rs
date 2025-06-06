@@ -18,6 +18,9 @@ impl<T> TaggedWord<T> {
     pub fn tag(&self) -> &T {
         &self.tag
     }
+    pub fn take_word(self) -> Word {
+        self.word
+    }
 }
 
 impl<T: Copy> TaggedWord<T> {
