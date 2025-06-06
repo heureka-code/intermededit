@@ -1,4 +1,3 @@
-#![allow(unused)]
 use std::{
     collections::{HashMap, HashSet},
     thread::JoinHandle,
@@ -6,15 +5,19 @@ use std::{
 };
 
 use intermededit::{
-    base::LetterVariationsPerOperation,
-    components::union_find_classify_words_into_components,
+    base::{LetterVariationsPerOperation, QueryableWordbucketList},
+    components::ConnectedComponents,
     operations::{Delete, Insert, Replace},
+    shortest_paths::{KeepBest, parallel_longest_shortest_path_targets},
     step_generation::FilterWordsForOperation,
     *,
 };
 use itertools::Itertools;
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
-use union_find::UnionFind;
+use petgraph::{
+    graph::{NodeIndex, UnGraph},
+    visit::GraphRef,
+};
+use rayon::iter::{IntoParallelRefIterator, ParallelBridge, ParallelIterator};
 
 fn visual_benchmark_without_stopping(by_length: &AllWords, start: Word, max_distance: usize) {
     let mut reached_from = HashMap::<Word, Word>::new();
@@ -116,13 +119,67 @@ const TASKS: [(&str, &str); 6] = [
     ("Zurufender", "Inschriften"),
 ];
 
-fn main() {
+fn time_function<T>(label: &str, func: impl FnOnce() -> T) -> T {
+    eprintln!("Start: {label}");
     let start = Instant::now();
-    let by_length = read_wordlist("wordlist-german.txt").expect("Wordlist file");
-    //println!(
-    //    "Time taken for reading file and precomputing bitmasks of wordlist: {:?}",
-    //    start.elapsed()
-    //);
+    let value = func();
+    eprintln!("Finished in {:?}: {label}", start.elapsed());
+    value
+}
+
+fn main() {
+    let all_words = time_function("Reading file and precomputing bitmasks of wordlist", || {
+        read_wordlist("wordlist-german.txt").expect("Wordlist file")
+    });
+    let all_edges = time_function("Computing all edges of graph", || {
+        intermededit::generate_edges_of_graph(&all_words)
+            .join()
+            .unwrap()
+    });
+    let components = ConnectedComponents::new(all_words.get_word_count(), &all_edges);
+
+    for (words, edges) in components.take_words_edges() {
+        let word_count = words.len();
+        if word_count < 30 || edges.len() < 30 {
+            continue;
+        }
+        let graph = edges_into_compressed_graph(edges.into_iter(), word_count);
+
+        let (tx, rx) = std::sync::mpsc::channel::<(NodeIndex, u8, KeepBest<NodeIndex, u8>)>();
+        let thread = std::thread::spawn(move || {
+            let pb = indicatif::ProgressBar::new(word_count as u64);
+            pb.set_style(indicatif::ProgressStyle::with_template(
+                "{msg} [{elapsed_precise:.green}] [{wide_bar:.cyan/blue}] {pos}/{len} ({per_sec}, {eta})"
+            )
+                .unwrap());
+
+            let mut best = KeepBest::new();
+            while let Ok((start, dst, targets)) = rx.recv() {
+                pb.inc(1);
+                best.extend(dst, targets.take_vec().into_iter().map(|t| (start, t)));
+            }
+            pb.finish();
+            best
+        });
+
+        parallel_longest_shortest_path_targets(&graph, tx, word_count);
+
+        let best = thread.join().unwrap();
+        let max = best.current_max();
+        let best = best
+            .take_vec()
+            .into_iter()
+            .map(|(s, t)| {
+                (
+                    all_words.word_for_tag(graph[s] as usize).to_string(),
+                    all_words.word_for_tag(graph[t] as usize).to_string(),
+                )
+            })
+            .collect_vec();
+
+        println!("{max} {best:?}");
+    }
+    /*
 
     let mut uf = union_find_classify_words_into_components(&by_length);
     // println!("finished");
@@ -135,16 +192,21 @@ fn main() {
         })
         .into_group_map();
 
+    let mut components_w = BufWriter::new(File::create_new("uf-components.txt").unwrap());
+    let mut sizes = BufWriter::new(File::create_new("uf-component-sizes.txt").unwrap());
     for (_, d) in comps {
         let line = d.iter().sorted().join("\t");
-        println!("{line}");
-    }
+        components_w.write_fmt(format_args!("{line}\n"));
+        sizes.write_fmt(format_args!("{}\n", d.iter().count()));
+    }*/
 
-    //intermededit::shortest_paths::find_shortest_paths_from_file(
-    //    "single-components-maxint.txt",
-    //    BufWriter::new(File::create_new("shortest_paths.txt").unwrap()),
-    //)
-    //.unwrap();
+    /*
+    intermededit::shortest_paths::find_shortest_paths_from_file(
+        "uf-components.txt",
+        BufWriter::new(File::create_new("uf-shortest-paths.txt").unwrap()),
+    )
+    .unwrap();
+    */
 
     // run_example_tasks_in_parallel(&by_length, &TASKS);
 

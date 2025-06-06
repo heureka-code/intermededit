@@ -7,28 +7,35 @@ use crate::base::{
     HasWord, InsertNewIntoWordbucketList, Letters, QueryableWordbucketList, TaggedWord, Word,
 };
 
+pub type WordNumber = usize;
+
 #[derive(Debug, Deref, Clone, PartialEq)]
-pub struct NumberedWord(TaggedWord<usize>);
+pub struct NumberedWord(TaggedWord<WordNumber>);
 impl HasWord for NumberedWord {
     fn word(&self) -> &Word {
         self.0.word()
+    }
+}
+impl NumberedWord {
+    pub fn take_word(self) -> Word {
+        self.0.take_word()
     }
 }
 
 #[derive(Debug, Default, Clone)]
 pub struct NumberedLenLetWordlist {
     buckets: LenLetWordBuckets<Vec<NumberedWord>>,
-    tag_map: HashMap<usize, Word>,
-    index: usize,
+    tag_map: Vec<Word>,
+    index: WordNumber,
 }
 impl NumberedLenLetWordlist {
     pub fn iter_lengths(&self) -> impl Iterator<Item = &HashMap<Letters, Vec<NumberedWord>>> {
         self.buckets.iter_lengths()
     }
-    pub fn word_for_tag(&self, tag: &usize) -> Option<&Word> {
-        self.tag_map.get(tag)
+    pub fn word_for_tag(&self, tag: WordNumber) -> &Word {
+        &self.tag_map[tag as usize]
     }
-    pub fn currently_used_index_count(&self) -> usize {
+    pub fn currently_used_index_count(&self) -> WordNumber {
         self.index
     }
 }
@@ -45,7 +52,8 @@ impl QueryableWordbucketList for NumberedLenLetWordlist {
 }
 impl InsertNewIntoWordbucketList<Word> for NumberedLenLetWordlist {
     fn insert_new(&mut self, word: Word) {
-        self.tag_map.insert(self.index, word.clone());
+        assert_eq!(self.index as usize, self.tag_map.len());
+        self.tag_map.push(word.clone());
         self.buckets
             .get_or_default(word.len(), word.calc_letters())
             .push(NumberedWord(TaggedWord::new(self.index, word)));

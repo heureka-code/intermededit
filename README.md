@@ -4,6 +4,9 @@ Repository: [https://github.com/heureka-code/intermededit](https://github.com/he
 
 [![Deploy documentation to GitHub Pages](https://github.com/heureka-code/intermededit/actions/workflows/deploy-docs-to-pages.yml/badge.svg)](https://github.com/heureka-code/intermededit/actions/workflows/deploy-docs-to-pages.yml)
 
+```shell
+❯ cargo doc --open       # open the documentation
+```
 
 ## First version using subtraction of b'A' from u8 repr of characters
 ```bash

@@ -1,10 +1,12 @@
 use std::collections::{HashMap, HashSet};
 
+mod graph_generation;
+pub mod shortest_paths;
+pub use graph_generation::{edges_into_compressed_graph, generate_edges_of_graph};
 pub mod base;
 pub mod components;
 pub mod edge_generation;
 mod read;
-pub mod shortest_paths;
 pub mod step_generation;
 pub mod wordbucket_impls;
 pub use base::Letters;

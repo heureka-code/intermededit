@@ -1,7 +1,9 @@
 use std::{collections::HashMap, ops::Index};
 
 use super::LenLetWordBuckets;
-use crate::base::{InsertNewIntoWordbucketList, Letters, QueryableWordbucketList, Word, WordlistExt};
+use crate::base::{
+    InsertNewIntoWordbucketList, Letters, QueryableWordbucketList, Word, WordlistExt,
+};
 
 #[derive(Debug, Default, PartialEq, Eq, Clone)]
 pub struct LenLetWordlist(LenLetWordBuckets<Vec<Word>>);

@@ -5,5 +5,5 @@ mod numbered_len_let_wordlist;
 pub use len_let_bucket::LenLetWordBuckets;
 pub use len_let_wordlist::LenLetWordlist;
 
-pub use numbered_len_let_wordlist::NumberedLenLetWordlist;
+pub use numbered_len_let_wordlist::{NumberedLenLetWordlist, NumberedWord};
 pub type AllWords = len_let_wordlist::LenLetWordlist;
