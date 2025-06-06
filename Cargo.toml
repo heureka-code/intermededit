@@ -34,6 +34,13 @@ name = "intermededit"
 path = "src/main.rs"
 bench = false
 
+[[bin]]
+name = "intermededit-file-with-edges"
+path = "src/bin/file_with_all_edges.rs"
+bench = false
+
+
+
 [[bench]]
 name = "max_depth_way_generation"
 harness = false

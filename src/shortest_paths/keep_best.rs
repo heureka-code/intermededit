@@ -2,6 +2,13 @@ use num::Unsigned;
 
 #[derive(derive_more::Deref, Debug)]
 pub struct KeepBest<T, I>(#[deref] Vec<T>, I);
+
+impl<T, I: Unsigned> Default for KeepBest<T, I> {
+    fn default() -> Self {
+        Self(vec![], I::zero())
+    }
+}
+
 impl<T, I: Unsigned + Copy + PartialOrd> KeepBest<T, I> {
     pub fn new() -> Self {
         Self(vec![], I::zero())

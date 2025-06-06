@@ -4,6 +4,7 @@ use itertools::Itertools;
 use union_find::{QuickUnionUf, UnionBySize, UnionFind};
 
 pub struct ConnectedComponents {
+    #[allow(unused)]
     uf: QuickUnionUf<UnionBySize>,
     pub words: HashMap<u32, Vec<u32>>,
     pub edges: HashMap<u32, Vec<(u32, u32)>>,
@@ -16,7 +17,6 @@ impl ConnectedComponents {
             uf.union(*s as usize, *t as usize);
         }
         let components_words = (0..word_count)
-            .into_iter()
             .map(|i| (uf.find(i) as u32, i as u32))
             .into_group_map();
         let components_edges = all_edges

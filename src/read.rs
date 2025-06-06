@@ -18,3 +18,10 @@ pub fn read_wordlist<L: InsertNewIntoWordbucketList<Word> + Default>(
     }
     Ok(by_length)
 }
+
+pub fn wordlist_path() -> String {
+    std::env::var("WORDLIST_FILE").unwrap_or(crate::DEFAULT_WORDLIST.to_string())
+}
+pub fn expect_wordlist<L: InsertNewIntoWordbucketList<Word> + Default>() -> L {
+    read_wordlist(&wordlist_path()).expect("Wordlist file")
+}

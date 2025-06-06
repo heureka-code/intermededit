@@ -7,9 +7,9 @@ use std::{
 };
 
 use crate::{
-    Word, all_after_one_step,
+    all_after_one_step,
     base::{HasWord, QueryableWordbucketList},
-    wordbucket_impls::{NumberedLenLetWordlist, NumberedWord},
+    wordbucket_impls::NumberedLenLetWordlist,
 };
 
 fn graph_building_thread(
@@ -20,7 +20,7 @@ fn graph_building_thread(
         let mut g = Vec::with_capacity(capacity);
 
         while let Ok((start, targets)) = rx.recv() {
-            for target in targets.into_iter() {
+            for target in targets.iter() {
                 if start != *target {
                     g.push((start, *target));
                 }

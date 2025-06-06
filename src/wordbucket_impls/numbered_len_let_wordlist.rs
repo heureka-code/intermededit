@@ -33,7 +33,7 @@ impl NumberedLenLetWordlist {
         self.buckets.iter_lengths()
     }
     pub fn word_for_tag(&self, tag: WordNumber) -> &Word {
-        &self.tag_map[tag as usize]
+        &self.tag_map[tag]
     }
     pub fn currently_used_index_count(&self) -> WordNumber {
         self.index
@@ -52,7 +52,7 @@ impl QueryableWordbucketList for NumberedLenLetWordlist {
 }
 impl InsertNewIntoWordbucketList<Word> for NumberedLenLetWordlist {
     fn insert_new(&mut self, word: Word) {
-        assert_eq!(self.index as usize, self.tag_map.len());
+        assert_eq!({ self.index }, self.tag_map.len());
         self.tag_map.push(word.clone());
         self.buckets
             .get_or_default(word.len(), word.calc_letters())

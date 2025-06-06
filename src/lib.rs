@@ -5,7 +5,6 @@ pub mod shortest_paths;
 pub use graph_generation::{edges_into_compressed_graph, generate_edges_of_graph};
 pub mod base;
 pub mod components;
-pub mod edge_generation;
 mod read;
 pub mod step_generation;
 pub mod wordbucket_impls;
@@ -15,7 +14,8 @@ pub use base::operations;
 pub use wordbucket_impls::AllWords;
 
 pub const MAX_WORD_LEN: usize = 50;
-pub use read::read_wordlist;
+pub const DEFAULT_WORDLIST: &str = "wordlist-german.txt";
+pub use read::{expect_wordlist, read_wordlist};
 pub use step_generation::all_after_one_step;
 
 pub fn find_way(
