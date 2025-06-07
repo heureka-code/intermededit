@@ -9,7 +9,7 @@
 //! these instances will also be stored inside of the word.
 //! By default this feature is turned of and the [Letters]
 //! are computed for calling code when needed.
-//! 
+//!
 //! Because there are only limited possibilities what could happen
 //! to letter occurences in a word after a single
 //! [operations::Insert], [operations::Replace] or [operations::Delete]
@@ -78,7 +78,7 @@
 //! Because there can be multiple possible implementation details a wordlist only needs
 //! to implement some traits for being used as a wordlist by other modules.
 //! Some interfaces require only some of them:
-//! 
+//!
 //! - [QueryableWordbucketList]
 //! - [InsertNewIntoWordbucketList]
 //!
@@ -91,7 +91,7 @@
 //! The length increases by exactly one and at most one new bit can be set.
 //! ([Letters::insert_variations])
 //! The type marker that is used for generic code is [operations::Insert].
-//! 
+//!
 //! ## Replace
 //! The length stays the same and at most one new bit can be set and at most one
 //! existing bit could unset.

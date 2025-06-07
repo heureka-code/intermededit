@@ -5,7 +5,7 @@ use std::{
 
 use petgraph::{
     graph::NodeIndex,
-    visit::{GraphRef, IntoNeighbors, VisitMap, Visitable},
+    visit::{GraphRef, IntoNeighbors, NodeCount, VisitMap, Visitable},
 };
 
 pub struct VecNodeDistancesMap<D>(Vec<D>);
@@ -27,8 +27,6 @@ impl<D> IndexMut<NodeIndex> for VecNodeDistancesMap<D> {
 }
 
 /// modified version of [petgraph::visit::Bfs] to include the hop distances
-///
-//
 #[derive(Clone)]
 pub struct HopDistanceBfs<N, VM, DM> {
     pub queue: VecDeque<N>,
@@ -47,6 +45,26 @@ where
             queue: VecDeque::new(),
             discovered: VM::default(),
             distances: DM::default(),
+        }
+    }
+}
+
+impl<D: num::Unsigned + Copy, N: Copy, VM: VisitMap<N>>
+    HopDistanceBfs<N, VM, VecNodeDistancesMap<D>>
+{
+    pub fn with_vec_distances(
+        graph: impl GraphRef + Visitable<NodeId = N, Map = VM> + NodeCount,
+        start: N,
+    ) -> HopDistanceBfs<N, VM, VecNodeDistancesMap<D>> {
+        let mut discovered = graph.visit_map();
+        let mut queue = VecDeque::new();
+        discovered.visit(start);
+        queue.push_front(start);
+        let distance_map = VecNodeDistancesMap::<D>::with_max_size(graph.node_count());
+        HopDistanceBfs {
+            queue,
+            discovered,
+            distances: distance_map,
         }
     }
 }
@@ -72,7 +90,7 @@ where
         }
     }
 
-    /// Return the next node in the bfs, or **None** if the traversal is done.
+    /// Return the next node in the bfs with it's distance, or **None** if the traversal is done.
     pub fn next<G>(&mut self, graph: G) -> Option<(N, D)>
     where
         G: IntoNeighbors<NodeId = N>,

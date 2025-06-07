@@ -11,9 +11,7 @@ use intermededit::{
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
-pub fn edges_for_operation<
-    Op: Operation + FilterWordsForOperation + LetterVariationsPerOperation,
->(
+fn edges_for_operation<Op: Operation + FilterWordsForOperation + LetterVariationsPerOperation>(
     all_words: &AllWords,
     len: usize,
 ) -> std::io::Result<()> {
@@ -56,7 +54,7 @@ fn generate_thread<Op: FilterWordsForOperation + LetterVariationsPerOperation>(
     })
 }
 
-fn concurrent_edge_file_creation(all_words: &AllWords) {
+pub fn concurrent_edge_file_creation(all_words: &AllWords) {
     let i = generate_thread::<Insert>(all_words);
     let d = generate_thread::<Delete>(all_words);
     let r = generate_thread::<Replace>(all_words);
@@ -64,9 +62,4 @@ fn concurrent_edge_file_creation(all_words: &AllWords) {
     i.join().unwrap();
     d.join().unwrap();
     r.join().unwrap();
-}
-
-fn main() {
-    let all_words = expect_wordlist();
-    concurrent_edge_file_creation(&all_words);
 }

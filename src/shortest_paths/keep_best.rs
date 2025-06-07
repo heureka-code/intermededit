@@ -1,40 +1,60 @@
 use num::Unsigned;
 
 #[derive(derive_more::Deref, Debug)]
-pub struct KeepBest<T, I>(#[deref] Vec<T>, I);
+pub struct KeepBest<T, I> {
+    #[deref]
+    best: Vec<T>,
+    value: I,
+}
 
 impl<T, I: Unsigned> Default for KeepBest<T, I> {
     fn default() -> Self {
-        Self(vec![], I::zero())
+        Self {
+            best: vec![],
+            value: I::zero(),
+        }
     }
 }
 
 impl<T, I: Unsigned + Copy + PartialOrd> KeepBest<T, I> {
     pub fn new() -> Self {
-        Self(vec![], I::zero())
+        Self {
+            best: vec![],
+            value: I::zero(),
+        }
     }
     pub fn current_max(&self) -> I {
-        self.1
+        self.value
     }
     pub fn push(&mut self, value: I, item: T) {
-        if value > self.1 {
-            self.1 = value;
-            self.0.clear();
-        }
-        if value == self.1 {
-            self.0.push(item);
+        if self.should_use_argument(value) {
+            self.best.push(item);
         }
     }
     pub fn extend(&mut self, value: I, items: impl Iterator<Item = T>) {
-        if value > self.1 {
-            self.1 = value;
-            self.0.clear();
-        }
-        if value == self.1 {
-            self.0.extend(items);
+        if self.should_use_argument(value) {
+            self.best.extend(items);
         }
     }
     pub fn take_vec(self) -> Vec<T> {
-        self.0
+        self.best
+    }
+    fn should_use_argument(&mut self, value: I) -> bool {
+        if value > self.value {
+            self.value = value;
+            self.best.clear();
+        }
+        value == self.value
+    }
+    pub fn best(&self) -> impl Iterator<Item = &T> {
+        self.best.iter()
+    }
+}
+
+impl<T, I> IntoIterator for KeepBest<T, I> {
+    type Item = <Vec<T> as IntoIterator>::Item;
+    type IntoIter = <Vec<T> as IntoIterator>::IntoIter;
+    fn into_iter(self) -> Self::IntoIter {
+        self.best.into_iter()
     }
 }

@@ -44,4 +44,14 @@ impl ConnectedComponents {
             }
         })
     }
+    pub fn count(&self) -> usize {
+        self.words_edges().count()
+    }
+    pub fn biggest_component_size(&self) -> usize {
+        self.words
+            .values()
+            .map(|c| c.len())
+            .max()
+            .unwrap_or_default()
+    }
 }

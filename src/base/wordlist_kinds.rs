@@ -40,9 +40,8 @@ pub trait QueryableWordbucketList {
 /// The insertable type is generic so that implementations can choose
 /// if they want to accept wrapper types or something else.
 ///
-/// Provides a method for inserting _new_ words into the data structure:
 /// Inserts a new word into the data structure.
-/// This method is not required to do any checks whether the value
+/// The method is not required to do any checks whether the value
 /// is already contained. The caller is required to check this
 /// if it is not clear from the use case.
 pub trait InsertNewIntoWordbucketList<Insertable> {

@@ -2,6 +2,8 @@ use std::collections::{HashMap, HashSet};
 
 mod graph_generation;
 pub mod shortest_paths;
+use base::HasWord;
+use base::QueryableWordbucketList;
 pub use graph_generation::{edges_into_compressed_graph, generate_edges_of_graph};
 pub mod base;
 pub mod components;
@@ -18,12 +20,16 @@ pub const DEFAULT_WORDLIST: &str = "wordlist-german.txt";
 pub use read::{expect_wordlist, read_wordlist};
 pub use step_generation::all_after_one_step;
 
-pub fn find_way(
-    by_length: &AllWords,
+pub fn find_way<L>(
+    by_length: &L,
     start: Word,
     max_distance: usize,
     target: Word,
-) -> Option<Vec<Word>> {
+) -> Option<Vec<Word>>
+where
+    L: QueryableWordbucketList,
+    L::W: PartialEq + std::hash::Hash,
+{
     let mut reached_from = HashMap::<Word, Word>::new();
     let mut current = HashSet::from_iter(vec![&start]);
 
@@ -32,10 +38,10 @@ pub fn find_way(
         for rel_start in current {
             for reached in all_after_one_step(by_length, rel_start) {
                 reached_from
-                    .entry(reached.clone())
+                    .entry(reached.word().clone())
                     .or_insert(rel_start.clone());
-                temp.insert(reached);
-                if reached == &target {
+                temp.insert(reached.word());
+                if reached.word() == &target {
                     let mut way = vec![target.clone()];
                     while way.last() != Some(&start) {
                         way.push(reached_from.get(way.last().unwrap()).unwrap().clone());

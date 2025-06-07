@@ -9,7 +9,7 @@ use crate::base::{
 
 pub type WordNumber = usize;
 
-#[derive(Debug, Deref, Clone, PartialEq)]
+#[derive(Debug, Deref, Clone, PartialEq, PartialOrd, Hash)]
 pub struct NumberedWord(TaggedWord<WordNumber>);
 impl HasWord for NumberedWord {
     fn word(&self) -> &Word {
