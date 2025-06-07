@@ -6,7 +6,9 @@ use std::{
 use intermededit::{
     base::QueryableWordbucketList,
     components::ConnectedComponents,
-    shortest_paths::{parallel_longest_shortest_path_targets, thread_collecting_best_from_components},
+    shortest_paths::{
+        parallel_longest_shortest_path_targets, thread_collecting_best_from_components,
+    },
     *,
 };
 use itertools::Itertools;

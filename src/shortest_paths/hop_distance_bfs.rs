@@ -28,7 +28,7 @@ impl<D> IndexMut<NodeIndex> for VecNodeDistancesMap<D> {
 
 /// modified version of [petgraph::visit::Bfs] to include the hop distances
 ///
-///
+//
 #[derive(Clone)]
 pub struct HopDistanceBfs<N, VM, DM> {
     pub queue: VecDeque<N>,

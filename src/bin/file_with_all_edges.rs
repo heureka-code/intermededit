@@ -1,7 +1,11 @@
 use std::thread::JoinHandle;
 
 use intermededit::{
-    base::{LetterVariationsPerOperation, QueryableWordbucketList}, expect_wordlist, operations::{Delete, Insert, Operation, Replace}, step_generation::{find_after_operation, FilterWordsForOperation}, AllWords, Word, MAX_WORD_LEN
+    AllWords, MAX_WORD_LEN, Word,
+    base::{LetterVariationsPerOperation, QueryableWordbucketList},
+    expect_wordlist,
+    operations::{Delete, Insert, Operation, Replace},
+    step_generation::{FilterWordsForOperation, find_after_operation},
 };
 
 use std::fs::File;
@@ -41,7 +45,6 @@ pub fn edges_for_operation<
     Ok(())
 }
 
-
 fn generate_thread<Op: FilterWordsForOperation + LetterVariationsPerOperation>(
     all_words: &AllWords,
 ) -> JoinHandle<()> {
@@ -67,4 +70,3 @@ fn main() {
     let all_words = expect_wordlist();
     concurrent_edge_file_creation(&all_words);
 }
-
