@@ -7,7 +7,7 @@ use super::{HasWord, Letters};
 /// In every length's bucket there are buckets for the different
 /// [Letters] bitmasks.
 ///
-/// The stored words only need to implement [super::TaggedWord] so they can
+/// The stored words only need to implement [super::HasWord] so they can
 /// carry additional information.
 pub trait QueryableWordbucketList {
     /// The stored word type. As it only needs to implement [HasWord] it

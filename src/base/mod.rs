@@ -1,11 +1,37 @@
-//! This module contains type for modeling the words of a list
+//! This module contains types for modeling the words of a list
 //! and defines interfaces for organising them efficiently.
 //!
+//! # Layout of a [Word]
+//! The words of a list are modelled in a special [Word] type.
+//! This stores the word's content in uppercase as [`std::sync::Arc<str>`]
+//! Words can generate an instance of [Letters] which describe
+//! what letters occur in the word. If the `cache-letters` feature is enabled,
+//! these instances will also be stored inside of the word.
+//! By default this feature is turned of and the [Letters]
+//! are computed for calling code when needed.
+//! 
 //! Because there are only limited possibilities what could happen
 //! to letter occurences in a word after a single
 //! [operations::Insert], [operations::Replace] or [operations::Delete]
-//! operation it is a good decision to group words by their letters.
+//! operation it is a good decision to group words by theese letters.
 //!
+//! This way words can be grouped in buckets depending on their [Letters]
+//! and "near" words which aren't impossible to reach in one operation
+//! can be accessed easier.
+//!
+//! ## Length of a [Word]
+//! Typically the length of a [String] is it's number of bytes
+//! so unicode characters would disturb the length grouping by bytes.
+//! Thatswhy words count their length by iterating over [str::chars]
+//! which yields individual characters and is aware of unicode cases.
+//!
+//! ## Purpose of a [TaggedWord]
+//! Because some applications need to assign additional information to a word (an index)
+//! wordlists require not a word but only a type implementing [HasWord].
+//! This trait defines a method for getting a reference to a word
+//! that can be used for i. e. [Letters] generation.
+//!
+//! # Generation of [Letters] for a word
 //! To do this efficiently letters are "hashed" into bit positions
 //! in a [u32] and a letter being present in a word at least once
 //! activates the corresponding bit.
@@ -46,8 +72,36 @@
 //!
 //! (Characters occured in the used test file, grouped by their associated bits)
 //!
+//! # Organisation of wordlists
+//! A wordlist should group words into buckets by their length and [Letters].
+//!
+//! Because there can be multiple possible implementation details a wordlist only needs
+//! to implement some traits for being used as a wordlist by other modules.
+//! Some interfaces require only some of them:
+//! 
+//! - [QueryableWordbucketList]
+//! - [InsertNewIntoWordbucketList]
 //!
 //!
+//! When searching for all possible words that could be reached from a starting word
+//! in one application of insert, replace or delete only some buckets must be
+//! considered and others can be ignored entirely.
+//!
+//! ## Insert
+//! The length increases by exactly one and at most one new bit can be set.
+//! ([Letters::insert_variations])
+//! The type marker that is used for generic code is [operations::Insert].
+//! 
+//! ## Replace
+//! The length stays the same and at most one new bit can be set and at most one
+//! existing bit could unset.
+//! ([Letters::substitution_variations])
+//! The type marker that is used for generic code is [operations::Replace].
+//!
+//! ## Delete
+//! The length decreases by one and at most one bit could be unset.
+//! ([Letters::delete_variations])
+//! The type marker that is used for generic code is [operations::Delete].
 
 mod has_word;
 mod letters;
