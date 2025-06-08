@@ -1,3 +1,8 @@
+//! More details about the model of words and the general concepts can be found in [base]
+//!
+//! The repository of this project lives here:
+//! [https://github.com/heureka-code/intermededit](https://github.com/heureka-code/intermededit)
+
 use std::collections::{HashMap, HashSet};
 
 mod graph_generation;

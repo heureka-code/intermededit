@@ -1,12 +1,22 @@
 use super::check_for_change::{only_one_different_letter, only_one_extra_letter};
 use crate::{
     Word,
-    base::{HasWord, LetterVariationsPerOperation, QueryableWordbucketList, operations::Operation},
+    base::{HasWord, LetterVariationsPerOperation, QueryableWordbucketList, operations},
 };
 
+/// This function iterates over all words in a list that are reachable from a given word by
+/// applying a specified operation.
+///
+/// The starting word is provided as second parameter.
+/// Any type that implements [HasWord] can be this starting point,
+/// the returned values will be of the type that the wordlist holds.
+///
+/// The operation to apply is specified by a type parameter of the function.
+/// Possible values of this type are [operations::Insert], [operations::Replace] and
+/// [operations::Delete]. All of them are only type markers can not be used to create values
 pub fn find_after_operation<
     'a,
-    Op: Operation + FilterWordsForOperation + LetterVariationsPerOperation,
+    Op: operations::Operation + FilterWordsForOperation + LetterVariationsPerOperation,
     L,
 >(
     all_words: &'a L,
@@ -25,7 +35,7 @@ where
 
 crate::base::operations::impl_operation_specific!(
     _filter_words_for_operation,
-    pub trait FilterWordsForOperation: (Operation) {
+    pub trait FilterWordsForOperation: (operations::Operation) {
         (
             fn filter_for_operation(start: &impl HasWord, target: &impl HasWord) -> bool,
                 insert: {

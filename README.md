@@ -3,10 +3,32 @@ Code documentation: [https://heureka-code.github.io/intermededit](https://heurek
 Repository: [https://github.com/heureka-code/intermededit](https://github.com/heureka-code/intermededit)
 
 [![Deploy documentation to GitHub Pages](https://github.com/heureka-code/intermededit/actions/workflows/deploy-docs-to-pages.yml/badge.svg)](https://heureka-code.github.io/intermededit)
+![Language](https://img.shields.io/github/languages/top/heureka-code/intermededit)
+
+
+# About
+This project was inspired by an exercise give in a course at university.
+The task was to find the shortest path from one word to another
+where in each step we were only allowed to insert, replace or delete a single letter.
+Additionally all intermediate steps had to be real words or grammatical forms of words.
+
+This program solves this problem by limiting the allowed intermediate steps to words from a
+specified list and trys to be as efficient as possible while doing the task.
+
+After the original version was able to solve the few examples we had to solve for the course
+I continued with modeling the whole graph where every word is a node and evere transition an edge.
+From there on I tried to find all connected components and the diameter.
+
+# Documentation
+You can access the documentation via [https://heureka-code.github.io/intermededit](https://heureka-code.github.io/intermededit) or you can run the following command:
 
 ```shell
-❯ cargo doc --open       # open the documentation
+cargo doc --open
 ```
+
+Specifically the chapter about the general model [general model](https://heureka-code.github.io/intermededit/intermededit/base/index.html) is relevant.
+
+# Outdated texts about previous version
 
 ## First version using subtraction of b'A' from u8 repr of characters
 ```bash

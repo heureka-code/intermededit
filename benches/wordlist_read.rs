@@ -1,7 +1,7 @@
 use criterion::{Criterion, criterion_group, criterion_main};
 use std::{hint::black_box, time::Duration};
 
-use intermededit::{Word, read_wordlist};
+use intermededit::{Word, read_wordlist, wordbucket_impls::LenLetWordlist};
 
 fn criterion_benchmark(c: &mut Criterion) {
     let mut g = c.benchmark_group("wordlist");
@@ -19,7 +19,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 
     g.bench_function("io and bitmasks", |b| {
         b.iter(|| {
-            let _ = read_wordlist(black_box("wordlist-german.txt"))
+            let _: LenLetWordlist = read_wordlist(black_box("wordlist-german.txt"))
                 .expect("Wordlist file to be present");
         });
     });

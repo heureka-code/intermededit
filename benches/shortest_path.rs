@@ -1,10 +1,11 @@
 use criterion::{Criterion, criterion_group, criterion_main};
 use std::{hint::black_box, time::Duration};
 
-use intermededit::{Word, find_way, read_wordlist};
+use intermededit::{Word, find_way, read_wordlist, wordbucket_impls::LenLetWordlist};
 
 fn criterion_benchmark(c: &mut Criterion) {
-    let all_words = read_wordlist("wordlist-german.txt").expect("Wordlist file to be present");
+    let all_words: LenLetWordlist =
+        read_wordlist("wordlist-german.txt").expect("Wordlist file to be present");
     let mut g = c.benchmark_group("shortest-path");
     g.measurement_time(Duration::from_secs(30));
 
