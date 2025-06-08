@@ -3,7 +3,7 @@ Code documentation: [https://heureka-code.github.io/intermededit](https://heurek
 Repository: [https://github.com/heureka-code/intermededit](https://github.com/heureka-code/intermededit)
 
 [![Deploy documentation to GitHub Pages](https://github.com/heureka-code/intermededit/actions/workflows/deploy-docs-to-pages.yml/badge.svg)](https://heureka-code.github.io/intermededit)
-![Language](https://img.shields.io/github/languages/top/heureka-code/intermededit)
+![GitHub top language](https://img.shields.io/github/languages/top/heureka-code/intermededit)
 
 
 # About
