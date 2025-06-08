@@ -1,10 +1,4 @@
-Code documentation: [https://heureka-code.github.io/intermededit](https://heureka-code.github.io/intermededit)
-
-Repository: [https://github.com/heureka-code/intermededit](https://github.com/heureka-code/intermededit)
-
 [![Deploy documentation to GitHub Pages](https://github.com/heureka-code/intermededit/actions/workflows/deploy-docs-to-pages.yml/badge.svg)](https://heureka-code.github.io/intermededit)
-![GitHub top language](https://img.shields.io/github/languages/top/heureka-code/intermededit)
-
 
 # About
 This project was inspired by an exercise give in a course at university.
