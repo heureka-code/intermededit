@@ -13,9 +13,12 @@
         pkgs.openssl
         pkgs.uv
         pkgs.cloc
+        pkgs.gnumake
+        pkgs.just
       ];
       shellHook = ''
         export XDG_CACHE_HOME="$(mktemp -d)"
+        just
       '';
     };
   in {

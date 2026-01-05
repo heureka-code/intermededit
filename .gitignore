@@ -5,7 +5,7 @@ data/
 /crates/duden-reference/graphs/
 /crates/duden-reference/*.txt
 /crates/duden-reference/*.log
-lists
+!/crates/duden-reference/sheet-tasks.txt
 *.pl
 .bacon-locations
 *.ignore

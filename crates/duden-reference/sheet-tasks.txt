@@ -1,0 +1,5 @@
+bier;leber;11
+herz;rasen;11
+blau;alge;11
+rhein;raus;11
+eis;kalt;11
