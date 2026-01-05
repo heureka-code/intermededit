@@ -1,0 +1,13 @@
+[project]
+name = "duden-reference"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "kaleido>=1.2.0",
+    "numpy>=2.4.0",
+    "pandas>=2.3.3",
+    "plotly>=6.5.0",
+    "tqdm>=4.67.1",
+]

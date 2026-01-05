@@ -1,0 +1,14 @@
+/target
+/lists/*.txt
+/pairs/
+data/
+/crates/duden-reference/graphs/
+/crates/duden-reference/*.txt
+/crates/duden-reference/*.log
+lists
+*.pl
+.bacon-locations
+*.ignore
+*.graph
+*.data
+__pycache__
